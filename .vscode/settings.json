@@ -1,5 +1,7 @@
 {
 	"files.associations": {
-		"stdlib.h": "c"
-	}
+		"stdlib.h": "c",
+		"history.h": "c"
+	},
+	"functionHeaderExtension.headerFilePath": "/home/ilallali/Desktop/Minishell/include/exec.h"
 }
