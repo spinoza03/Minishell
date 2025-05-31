@@ -6,38 +6,36 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/05/25 18:36:08 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/05/31 11:51:42 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
+# define HER 1
 typedef enum e_tkn_type
-{
-    NULL_Tk,    // 0
-    wrd,        // 1
-    PI,        // |    2
-    red_in,        // <    3
-    red_out,    // >    4
-    red_apnd,    // >>    5
-    HEREDOC        // <<    6
+{      
+    red_in,    // < 
+	red_out,    // >    1
+    red_apnd,    // >>    2
+    HEREDOC        // <<    3
 }t_tkn_type;
 
-typedef struct s_tkn
+
+typedef struct s_redirs
 {
-    char            *vl;
-    t_tkn_type        tkn_typ;
-    struct s_tkn    *next;
-}t_tkn;
+	char *filename;
+	t_tkn_type type;
+    struct s_redirs    *next;
+}t_redirs;
+
 
 typedef struct s_cmd
 {
-	char **args;          // command and its arguments: ["echo", "hello", NULL]
-	char *infile;         // for '<'
-	char *outfile;        // for '>' or '>>'
-	int append;           // 1 if '>>', 0 if '>'
-	int heredoc;          // 1 if '<<'
+	char 		**args;          // command and its arguments: ["echo", "hello", NULL]
+	t_redirs 	*pre_redirs;
+	t_redirs 	*post_redirs;
 	struct s_cmd *next;   // for pipelines (| command | command | ...)
 } t_cmd;
 
@@ -53,4 +51,6 @@ typedef struct s_cmd
 #include <readline/history.h>
 
 t_cmd *token_to_cmd(t_tkn *tokens);
+void append_token(t_tkn **head, char *val, t_tkn_type type);
+t_tkn *mock_tokens(char *line);
 #endif

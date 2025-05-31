@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/05/25 19:11:34 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/05/31 14:12:40 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int main(void)
 {
     char *input;
-
+	// t_cmd *cmds;
 	// create_env(envp);
     while (1)
     {
@@ -32,8 +32,14 @@ int main(void)
             free(input);
             break;
         }
-		builtins_builder(input);
+		tokens = mock_tokens(input);
         free(input);
     }
+	while (tokens)
+	{
+		printf("%s | type: %d\n", tokens->vl, tokens->tkn_typ);
+		tokens = tokens->next; 
+	}
+	
     return 0;
 }
