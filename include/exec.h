@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/05/31 16:46:23 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:07:59 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void    free_cmd_structure(t_cmd *cmd);
 void create_env_list(t_env_copy **list_head, char **envp);
 
 /* FUNCTIONS */
+void env_lstclear(t_env_copy **list_head);
+t_env_copy *env_lstnew(char *key_str, char *value_str);
 void	ft_lstadd_back(t_env_copy **lst, t_env_copy *new_node);
 void	ft_lstadd_front(t_env_copy **lst, t_env_copy *new);
 t_env_copy	*ft_lstlast(t_env_copy *lst);
