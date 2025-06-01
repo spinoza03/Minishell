@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 16:44:32 by ilallali          #+#    #+#             */
-/*   Updated: 2025/05/31 18:21:59 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/01 15:20:57 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ int parse_env(const char *env_string, char **key_ptr, char **value_ptr)
     *value_ptr = NULL;
     if (!env_string || !key_ptr || !value_ptr)
         return (0); 
+
     equal_sign_pos = strchr(env_string, '=');
-    if (equal_sign_pos == NULL)
+
+    if (equal_sign_pos == NULL) // Case: No '='
     {
         key_len = strlen(env_string);
         *key_ptr = (char *)malloc(key_len + 1);
@@ -32,7 +34,7 @@ int parse_env(const char *env_string, char **key_ptr, char **value_ptr)
             return (0);
         }
         strcpy(*key_ptr, env_string);
-        *value_ptr = strdup("");
+        *value_ptr = strdup(""); // Value is empty string
         if (!(*value_ptr))
         {
             perror("minishell: malloc for empty value (no '=')");
@@ -41,26 +43,30 @@ int parse_env(const char *env_string, char **key_ptr, char **value_ptr)
             return (0);
         }
         return (1);
-    key_len = equal_sign_pos - env_string; 
-    *key_ptr = (char *)malloc(key_len + 1);
-    if (!(*key_ptr))
-    {
-        perror("minishell: malloc for key");
-        return (0);
     }
-    strncpy(*key_ptr, env_string, key_len);
-    (*key_ptr)[key_len] = '\0';
-    *value_ptr = (char *)malloc(strlen(equal_sign_pos + 1) + 1);
-    if (!(*value_ptr))
+    else // Case: '=' was found
     {
-        perror("minishell: malloc for value");
-        free(*key_ptr);
-        *key_ptr = NULL;
-        return (0);
+        key_len = equal_sign_pos - env_string; 
+        *key_ptr = (char *)malloc(key_len + 1);
+        if (!(*key_ptr))
+        {
+            perror("minishell: malloc for key");
+            return (0);
+        }
+        strncpy(*key_ptr, env_string, key_len);
+        (*key_ptr)[key_len] = '\0';
+
+        *value_ptr = (char *)malloc(strlen(equal_sign_pos + 1) + 1);
+        if (!(*value_ptr))
+        {
+            perror("minishell: malloc for value");
+            free(*key_ptr);
+            *key_ptr = NULL;
+            return (0);
+        }
+        strcpy(*value_ptr, equal_sign_pos + 1);
+        return (1);
     }
-    strcpy(*value_ptr, equal_sign_pos + 1);
-    return (1);
-	}
 }
 
 void create_env_list(t_env_copy **list_head, char **env)
