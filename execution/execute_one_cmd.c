@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 14:47:25 by ilallali          #+#    #+#             */
-/*   Updated: 2025/05/31 16:37:48 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/01 18:16:57 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,31 @@ void    execute_this_one_command(char **args, char **envp)
 
     if (!args || !args[0])
         return;
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("minishell: fork");
-        return;
-    }
-    else if (pid == 0)
-    {
-        if (execve(args[0], args, envp) == -1)
-        {
-            perror("minishell");
-            exit(EXIT_FAILURE);
-        }
-    }
-    else // Parent process
-    {
-        int child_status;
-        if (waitpid(pid, &child_status, 0) == -1)
-        {
-            perror("minishell: waitpid");
-        }
-    }
+	if (check_builtins(args[0]))
+		exec_builtins(args[0], envp);
+	else
+	{
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("minishell: fork");
+			return;
+		}
+		else if (pid == 0)
+		{
+			if (execve(args[0], args, envp) == -1)
+			{
+				perror("minishell");
+				exit(EXIT_FAILURE);
+			}
+		}
+		else // Parent process
+		{
+			int child_status;
+			if (waitpid(pid, &child_status, 0) == -1)
+			{
+				perror("minishell: waitpid");
+			}
+		}
+	}
 }

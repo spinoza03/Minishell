@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 20:46:49 by ilallali          #+#    #+#             */
-/*   Updated: 2025/05/26 15:23:57 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/01 15:26:32 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,8 @@ t_cmd	*new_cmd()
 	if(!cmd)
 		return NULL;
 	cmd->args = NULL;
-	cmd->infile = NULL;
-	cmd->outfile = NULL;
-	cmd->append = 0;
-	cmd->heredoc = 0;
+	cmd->post_redirs = NULL;
+	cmd->pre_redirs = NULL;
 	cmd->next = NULL;
 	return cmd;
 }

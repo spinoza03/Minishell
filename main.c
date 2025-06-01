@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/05/31 16:47:11 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:13:38 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int main(int argc, char **argv, char **envp)
     // Silence unused argc/argv warnings for now
     (void)argc;
     (void)argv;
-	create_env_list(head, envp);
+	create_env_list(&head, envp);
 	
     // from your creat_env.c
 
@@ -37,13 +37,6 @@ int main(int argc, char **argv, char **envp)
         if (*input_line) // If the input is not empty
         {
             add_history(input_line);
-
-            // Basic "exit" command check (will be a proper builtin later)
-            if (strcmp(input_line, "exit") == 0)
-            {
-                free(input_line);
-                break;
-            }
 
             // 1. Parse the input line using our simple internal parser
             parsed_command = simple_parser_to_cmd(input_line);

@@ -6,7 +6,7 @@
 #    By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/23 21:50:34 by ilallali          #+#    #+#              #
-#    Updated: 2025/05/31 14:50:19 by ilallali         ###   ########.fr        #
+#    Updated: 2025/06/01 17:26:42 by ilallali         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ CC = cc
 CFLAGS = 
 NAME = minishell
 
-SRC = main.c execute_one_cmd.c minipars.c
+SRC = main.c execute_one_cmd.c minipars.c creat_env.c utils/nodes_managemet.c builts/build_pwd.c \
+	buitls/check_builts.c
 
 OBJ = ${SRC:.c=.o}
 HEADER = include/exec.h

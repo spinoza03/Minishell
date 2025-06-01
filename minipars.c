@@ -11,10 +11,7 @@ t_cmd   *new_cmd_for_parser(void)
 
     cmd = (t_cmd *)malloc(sizeof(t_cmd));
     if (!cmd)
-    {
-        perror("minishell: malloc for t_cmd");
         return (NULL);
-    }
     cmd->args = NULL;
     cmd->pre_redirs = NULL;  // As per your exec.h
     cmd->post_redirs = NULL; // As per your exec.h

@@ -12,7 +12,9 @@
 		"functional": "c",
 		"tuple": "c",
 		"type_traits": "c",
-		"utility": "c"
+		"utility": "c",
+		"types.h": "c",
+		"exec.h": "c"
 	},
 	"functionHeaderExtension.headerFilePath": "/home/ilallali/Desktop/Minishell/include/exec.h"
 }
