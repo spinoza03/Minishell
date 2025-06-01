@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/01 19:02:45 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/02 00:00:29 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,7 @@ int execute_command_controller(t_cmd *command, t_env_copy **env_list, char **ori
 void        child_process_execution(t_cmd *command, char **original_envp);
 int         parent_process_wait(pid_t pid);
 int         execute_external_command(t_cmd *command, char **original_envp);
+int execute_external_command(t_cmd *command, char **original_envp);
+int parent_process_wait(pid_t pid);
+void child_process_execution(t_cmd *command, char **original_envp);
 #endif
