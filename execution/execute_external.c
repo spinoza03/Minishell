@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execute_external.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:58:23 by allali            #+#    #+#             */
-/*   Updated: 2025/06/01 23:58:48 by allali           ###   ########.fr       */
+/*   Updated: 2025/06/04 18:18:08 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/exec.h"
 
-int execute_external_command(t_cmd *command, char **original_envp)
+int execute_external_command(const char *exec_path, t_cmd *command, char **original_envp)
 {
     pid_t   pid;
     int     exit_status;
@@ -34,7 +34,7 @@ int execute_external_command(t_cmd *command, char **original_envp)
         // --- Child Process ---
         // child_process_execution will call execve and exit.
         // It does not return if execve is successful.
-        child_process_execution(command, original_envp);
+        child_process_execution(exec_path, command->args, original_envp);
         // The line below should ideally not be reached if child_process_execution
         // handles all exit paths (e.g., exit() after failed execve).
         // Adding it for robustness in case child_process_execution had an oversight.

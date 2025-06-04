@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 16:43:48 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/04 13:53:10 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:06:52 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,71 +29,52 @@ char *get_env_value(t_env_copy *env_list, const char *key)
     }
     return (NULL);
 }
-char *resolve_command_path_part1(const char *command_name, t_env_copy *env_list)
+char *resolve_command_path(const char *command_name, t_env_copy *env_list)
 {
     char *path_env_value;
     char **directories;
+    char *full_path;
     int i;
 
-    if (!command_name)
+    if (!command_name || *command_name == '\0')
         return (NULL);
-
-    // 1. If command_name contains a '/', it's an absolute or relative path.
-    //    (We'll handle access check for this later, for now just acknowledge it)
-    //    For this part, if it contains '/', we won't do PATH search.
-    //    Real implementation would check access(command_name, X_OK)
-    //    and return strdup(command_name) if OK.
-    if (strchr(command_name, '/') != NULL) // Using strchr, or your ft_strchr
+    if (strchr(command_name, '/') != NULL)
     {
-        printf("DEBUG (resolve_command_path): '%s' is a path, skipping PATH search for now.\n", command_name);
-        // For a real implementation here:
-        // if (access(command_name, X_OK) == 0)
-        //     return (strdup(command_name)); // Or ft_strdup
-        // else
-        //     return (NULL); // Path given but not accessible/executable
-        return (NULL); // Placeholder for now
+        if (access(command_name, X_OK) == 0)
+            return (ft_strdup(command_name));
+        else
+            return (NULL);
     }
-
-    // 2. Get the PATH environment variable value.
     path_env_value = get_env_value(env_list, "PATH");
-    if (!path_env_value)
-    {
-        printf("DEBUG (resolve_command_path): PATH variable not found.\n");
+    if (!path_env_value || *path_env_value == '\0') 
         return (NULL);
-    }
-    printf("DEBUG (resolve_command_path): PATH = \"%s\"\n", path_env_value);
-
-    // 3. Split the PATH value by ':'
-    //    Ensure your ft_split handles NULL or empty strings gracefully if path_env_value could be so.
-    directories = ft_split(path_env_value, ':'); // Assuming ft_split is from your Libft
+    directories = ft_split(path_env_value, ':'); 
     if (!directories)
-    {
-        perror("minishell: ft_split error in resolve_command_path");
-        return (NULL); // ft_split failed (e.g., malloc error)
-    }
-
-    // 4. For now, just print the directories (DEBUG)
+		return (NULL);
     i = 0;
+    full_path = NULL;
     while (directories[i])
     {
-        printf("DEBUG (resolve_command_path): PATH dir[%d] = \"%s\"\n", i, directories[i]);
+        size_t dir_len = ft_strlen(directories[i]);
+        size_t cmd_len = ft_strlen(command_name);
+        full_path = (char *)malloc(dir_len + 1 + cmd_len + 1);
+        if (!full_path)
+        {
+            ft_free_str_array(directories);
+            return (NULL);
+        }
+        ft_strcpy(full_path, directories[i]);
+        ft_strcat(full_path, "/");
+        ft_strcat(full_path, command_name);
+        if (access(full_path, X_OK) == 0)
+        {
+            ft_free_str_array(directories);
+            return (full_path);
+        }
+        free(full_path);
+        full_path = NULL;
         i++;
     }
-
-    // 5. Free the allocated memory for 'directories'
-    //    (You'll need a helper function in Libft to free a char** (array of strings))
-    //    Let's call it ft_free_str_array or similar.
-    //    For now, manual free for this debug version:
-    i = 0;
-    while (directories[i])
-    {
-        free(directories[i]);
-        directories[i] = NULL;
-        i++;
-    }
-    free(directories);
-    directories = NULL;
-
-    // We will build and return the actual path in the next step.
-    return (NULL); // Placeholder for now, as we are not yet returning a resolved path.
+    ft_free_str_array(directories);
+    return (NULL);
 }

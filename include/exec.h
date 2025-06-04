@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/04 13:29:21 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:22:45 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,11 @@ void    free_cmd_structure(t_cmd *cmd);
 void create_env_list(t_env_copy **list_head, char **envp);
 
 /* FUNCTIONS */
-char *resolve_command_path_part1(const char *command_name, t_env_copy *env_list);
+int execute_external_command(const char *exec_path, t_cmd *command, char **original_envp);
+void ft_free_str_array(char **array);
+char	*ft_strcpy(char *dst, char *src);
+char *ft_strcat(char *dst, const char *src);
+char *resolve_command_path(const char *command_name, t_env_copy *env_list);
 int	ft_strcmp(const char *str, const char *cmp);
 size_t	ft_strlen(const char *s);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
@@ -100,10 +104,7 @@ int	ft_lstsize(t_env_copy *lst);
 //----------------------------------------------------------------
 int	execute_builtin_command(t_builtin_id id, t_cmd *command, t_env_copy **env_list);
 int execute_command_controller(t_cmd *command, t_env_copy **env_list, char **original_envp);
-void        child_process_execution(t_cmd *command, char **original_envp);
+void	child_process_execution(const char *exec_path, char **args, char **original_envp);
 int         parent_process_wait(pid_t pid);
-int         execute_external_command(t_cmd *command, char **original_envp);
-int execute_external_command(t_cmd *command, char **original_envp);
 int parent_process_wait(pid_t pid);
-void child_process_execution(t_cmd *command, char **original_envp);
 #endif
