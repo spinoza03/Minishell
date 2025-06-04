@@ -60,6 +60,7 @@ t_cmd   *simple_parser_to_cmd(char *line_input)
     char    **temp_args;
     int     arg_count = 0;
 
+	(void)temp_args;
     if (!line_input || !*line_input)
         return (NULL);
 
@@ -67,18 +68,18 @@ t_cmd   *simple_parser_to_cmd(char *line_input)
     if (!cmd_struct)
         return (NULL);
 
-    line_copy = strdup(line_input); // strtok modifies the string, so we use a copy
+    line_copy = ft_strdup(line_input); // strtok modifies the string, so we use a copy
     if (!line_copy)
     {
-        perror("minishell: strdup for simple_parser");
+        perror("minishell: ft_strdup for simple_parser");
         free_cmd_structure(cmd_struct);
         return (NULL);
     }
 
     // First, count arguments to allocate exact space for cmd_struct->args
-    char *count_copy = strdup(line_copy); // Another copy for counting
+    char *count_copy = ft_strdup(line_copy); // Another copy for counting
     if (!count_copy) {
-        perror("minishell: strdup for count_copy");
+        perror("minishell: ft_strdup for count_copy");
         free(line_copy);
         free_cmd_structure(cmd_struct);
         return (NULL);
@@ -113,11 +114,11 @@ t_cmd   *simple_parser_to_cmd(char *line_input)
     token = strtok(line_copy, " \t\n\r"); // Use the first copy of the line
     while (token != NULL && arg_count < MAX_MOCK_ARGS)
     {
-        cmd_struct->args[arg_count] = strdup(token);
+        cmd_struct->args[arg_count] = ft_strdup(token);
         if (!cmd_struct->args[arg_count])
         {
-            perror("minishell: strdup for argument");
-            // Free already strdup'd args
+            perror("minishell: ft_strdup for argument");
+            // Free already ft_strdup'd args
             for (int i = 0; i < arg_count; i++)
                 free(cmd_struct->args[i]);
             free(cmd_struct->args); // Free the array itself

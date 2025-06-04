@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/02 00:00:29 by allali           ###   ########.fr       */
+/*   Updated: 2025/06/04 13:29:21 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,28 @@ void    free_cmd_structure(t_cmd *cmd);
 void create_env_list(t_env_copy **list_head, char **envp);
 
 /* FUNCTIONS */
+char *resolve_command_path_part1(const char *command_name, t_env_copy *env_list);
+int	ft_strcmp(const char *str, const char *cmp);
+size_t	ft_strlen(const char *s);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
+char	*ft_strdup(const char *s);
+char	**ft_split(const char *s, char c);
+char *get_env_value(t_env_copy *env_list, const char *key);
+t_env_copy	*ft_lstlast(t_env_copy *lst);
+void	ft_lstadd_back(t_env_copy **lst, t_env_copy *new_node);
+void env_lstclear(t_env_copy **list_head);
+void del_env_node_content(t_env_copy *node);
+t_builtin_id get_builtin_id(const char *cmd_name);
+int execute_command_controller(t_cmd *command, t_env_copy **env_list,
+                                                            char **original_envp);
 void	exec_builtins(char *cmd, t_env_copy **env);
 int	check_builtins(char *cmd);
-int	exec_pwd(t_env_copy **env);
+int	exec_pwd(t_cmd *cmd);
 int	is_builtins(char *cmd, t_env_copy **env);
-void env_lstclear(t_env_copy **list_head);
 t_env_copy *env_lstnew(char *key_str, char *value_str);
-void	ft_lstadd_back(t_env_copy **lst, t_env_copy *new_node);
 void	ft_lstadd_front(t_env_copy **lst, t_env_copy *new);
 t_env_copy	*ft_lstlast(t_env_copy *lst);
 int	ft_lstsize(t_env_copy *lst);
-void	ft_lstadd_back(t_env_copy **lst, t_env_copy *new_node);
 
 //----------------------------------------------------------------
 int	execute_builtin_command(t_builtin_id id, t_cmd *command, t_env_copy **env_list);

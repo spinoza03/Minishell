@@ -6,64 +6,56 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/01 17:13:38 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/02 15:05:42 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
+static int g_last_exit_status = 0;
+
 int main(int argc, char **argv, char **envp)
 {
-    char    *input_line;
-    t_cmd   *parsed_command;
-	t_env_copy *head;
+    char        *input_line;
+    t_cmd       *parsed_command;
+    t_env_copy  *shell_env_list; // Changed from 'head' for clarity
 
-    // Silence unused argc/argv warnings for now
     (void)argc;
     (void)argv;
-	create_env_list(&head, envp);
-	
-    // from your creat_env.c
-
+    shell_env_list = NULL; // Important to initialize to NULL
+    create_env_list(&shell_env_list, envp);
     while (1)
     {
-        input_line = readline("minishell-sim> "); // Changed prompt for clarity
+        input_line = readline("minishell> "); // Prompt
+
         if (!input_line) // Ctrl-D pressed (EOF)
         {
-            printf("exit\n"); // Mimic bash behavior
+            printf("exit\n"); // Mimic bash behavior for Ctrl-D
             break;
         }
-
         if (*input_line) // If the input is not empty
         {
-            add_history(input_line);
-
-            // 1. Parse the input line using our simple internal parser
+            add_history(input_line); // History
             parsed_command = simple_parser_to_cmd(input_line);
 
             if (parsed_command)
             {
-                // 2. Execute the command
-                // For this test, parsed_command->args[0] must be an absolute path
-                // e.g., you type: "/bin/ls -l" or "/bin/echo hello"
                 if (parsed_command->args && parsed_command->args[0])
                 {
-                    execute_this_one_command(parsed_command->args, envp);
+                    g_last_exit_status = execute_command_controller(parsed_command,
+                                                                 &shell_env_list, envp);
                 }
-                else
+                else if (!parsed_command->args) // Parser returned a command struct but no args array (e.g. only redirections)
                 {
-                    // This case should ideally not be reached if simple_parser_to_cmd
-                    // returns NULL for empty/invalid args.
-                    // fprintf(stderr, "minishell: No command to execute after parsing.\n");
+
                 }
                 
-                // 3. Free the command structure
                 free_cmd_structure(parsed_command);
             }
         }
         free(input_line); // Free the line read by readline
     }
-
-    // rl_clear_history(); // Optional: clear readline history on exit
-    return (0); // Or the last command's exit status
+    env_lstclear(&shell_env_list);
+    rl_clear_history(); // Allowed function
+    return (g_last_exit_status); // Exit with the status of the last command
 }

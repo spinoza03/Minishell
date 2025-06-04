@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 17:09:01 by ilallali          #+#    #+#             */
-/*   Updated: 2025/05/31 18:05:52 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/03 16:16:23 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	ft_lstadd_back(t_env_copy **lst, t_env_copy *new_node)
 	else
 		*lst = new_node;
 }
+
 void	ft_lstadd_front(t_env_copy **lst, t_env_copy *new)
 {
 	if (!lst || !new)
@@ -40,7 +41,8 @@ t_env_copy	*ft_lstlast(t_env_copy *lst)
 	return (lst);
 }
 
-void env_lstclear(t_env_copy **list_head) {
+void env_lstclear(t_env_copy **list_head)
+{
     t_env_copy *current;
     t_env_copy *next_node;
 
@@ -55,6 +57,7 @@ void env_lstclear(t_env_copy **list_head) {
     }
     *list_head = NULL;
 }
+
 t_env_copy *env_lstnew(char *key_str, char *value_str)
 {
     t_env_copy *new_node;
@@ -64,10 +67,10 @@ t_env_copy *env_lstnew(char *key_str, char *value_str)
         perror("minishell: malloc for env_lstnew");
         return (NULL);
     }
-    new_node->key = strdup(key_str);
-    new_node->value = strdup(value_str);
+    new_node->key = ft_strdup(key_str);
+    new_node->value = ft_strdup(value_str);
     if (!new_node->key || !new_node->value) {
-        perror("minishell: strdup in env_lstnew");
+        perror("minishell: ft_strdup in env_lstnew");
         free(new_node->key);
         free(new_node->value);
         free(new_node);

@@ -6,11 +6,11 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 16:44:32 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/01 15:20:57 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/03 16:16:23 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exec.h"
+#include "../include/exec.h"
 
 int parse_env(const char *env_string, char **key_ptr, char **value_ptr)
 {
@@ -34,7 +34,7 @@ int parse_env(const char *env_string, char **key_ptr, char **value_ptr)
             return (0);
         }
         strcpy(*key_ptr, env_string);
-        *value_ptr = strdup(""); // Value is empty string
+        *value_ptr = ft_strdup(""); // Value is empty string
         if (!(*value_ptr))
         {
             perror("minishell: malloc for empty value (no '=')");
@@ -93,6 +93,7 @@ void create_env_list(t_env_copy **list_head, char **env)
 				exit(EXIT_FAILURE);
 			}
 			ft_lstadd_back(list_head, new_node);
-		}		
+		}
+		i++;
 	}
 }

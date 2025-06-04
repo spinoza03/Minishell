@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:53 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/01 18:45:12 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:55:46 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,20 @@ t_builtin_id get_builtin_id(const char *cmd_name)
 {
     if (!cmd_name)
         return (NOT_A_BUILTIN_ID); // Handle NULL input
-    if (strcmp(cmd_name, "pwd") == 0)
+    if (ft_strcmp(cmd_name, "pwd") == 0)
         return (BUILTIN_PWD);
     // Add other built-ins here as you implement them:
-    // else if (strcmp(cmd_name, "echo") == 0)
+    // else if (ft_strcmp(cmd_name, "echo") == 0)
     //     return (BUILTIN_ECHO);
-    // else if (strcmp(cmd_name, "cd") == 0)
+    // else if (ft_strcmp(cmd_name, "cd") == 0)
     //     return (BUILTIN_CD);
-    // else if (strcmp(cmd_name, "export") == 0)
+    // else if (ft_strcmp(cmd_name, "export") == 0)
     //     return (BUILTIN_EXPORT);
-    // else if (strcmp(cmd_name, "unset") == 0)
+    // else if (ft_strcmp(cmd_name, "unset") == 0)
     //     return (BUILTIN_UNSET);
-    // else if (strcmp(cmd_name, "env") == 0)
+    // else if (ft_strcmp(cmd_name, "env") == 0)
     //     return (BUILTIN_ENV);
-    // else if (strcmp(cmd_name, "exit") == 0)
+    // else if (ft_strcmp(cmd_name, "exit") == 0)
     //     return (BUILTIN_EXIT);
     return (NOT_A_BUILTIN_ID); // If no match, it's not a recognized built-in
 }
