@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:53 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/04 13:55:46 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/08 16:49:38 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_builtin_id get_builtin_id(const char *cmd_name)
     if (ft_strcmp(cmd_name, "pwd") == 0)
         return (BUILTIN_PWD);
     // Add other built-ins here as you implement them:
-    // else if (ft_strcmp(cmd_name, "echo") == 0)
-    //     return (BUILTIN_ECHO);
+    else if (ft_strcmp(cmd_name, "echo") == 0)
+        return (BUILTIN_ECHO);
     // else if (ft_strcmp(cmd_name, "cd") == 0)
     //     return (BUILTIN_CD);
     // else if (ft_strcmp(cmd_name, "export") == 0)
@@ -41,8 +41,8 @@ int execute_builtin_command(t_builtin_id id, t_cmd *command, t_env_copy **env_li
 	exit_status = 1; // Default error status if id is not handled
 	if (id == BUILTIN_PWD)
 		exit_status = exec_pwd(command);
-	// else if (id == BUILTIN_ECHO)
-	// exit_status = exec_echo(command); // Pass env_list if needed by echo
+	else if (id == BUILTIN_ECHO)
+	exit_status = exec_echo(command);
 	// else if (id == BUILTIN_CD)
 	// exit_status = exec_cd(command, env_list);
 	// else if (id == BUILTIN_ENV)
