@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/02 15:05:42 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/09 15:48:00 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int main(int argc, char **argv, char **envp)
                 {
 
                 }
-                
                 free_cmd_structure(parsed_command);
             }
         }

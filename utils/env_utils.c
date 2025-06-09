@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 16:43:48 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/04 18:06:52 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:32:37 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,32 @@ char *resolve_command_path(const char *command_name, t_env_copy *env_list)
     }
     ft_free_str_array(directories);
     return (NULL);
+}
+
+int set_env_value(t_env_copy **env_list, const char *key, const char *new_value)
+{
+    t_env_copy *current;
+    char       *value_copy;
+
+    if (!env_list || !key || !new_value)
+        return (1);
+    current = *env_list;
+    while (current)
+    {
+        if (ft_strcmp(current->key, key) == 0)
+        {
+            value_copy = ft_strdup(new_value);
+            if (!value_copy)
+                return (1);
+            free(current->value);
+            current->value = value_copy;
+            return (0);
+        }
+        current = current->next;
+	}
+    t_env_copy *new_node = env_lstnew((char *)key, (char *)new_value);
+    if (!new_node)
+        return (1);
+    ft_lstadd_back(env_list, new_node);
+    return (0);
 }

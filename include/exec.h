@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/08 17:39:12 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/09 14:12:01 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,13 @@ void    free_cmd_structure(t_cmd *cmd);
 void create_env_list(t_env_copy **list_head, char **envp);
 
 /* FUNCTIONS */
+int	exec_export(t_cmd *command, t_env_copy **env_list);
+char	*ft_strchr(const char *str, int c);
+int	exec_env(t_cmd *command, t_env_copy **env_list);
+int	exec_cd(t_cmd *command, t_env_copy **env_list);
+int	set_env_value(t_env_copy **env_list, const char *key, const char *new_value);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_putchar_fd(char c, int fd);
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 int exec_echo(t_cmd *command);
