@@ -74,6 +74,7 @@ void    free_cmd_structure(t_cmd *cmd);
 void create_env_list(t_env_copy **list_head, char **envp);
 
 /* FUNCTIONS */
+void env_lstdel_one(t_env_copy **list_head, const char *key);
 int	exec_export(t_cmd *command, t_env_copy **env_list);
 char	*ft_strchr(const char *str, int c);
 int	exec_env(t_cmd *command, t_env_copy **env_list);

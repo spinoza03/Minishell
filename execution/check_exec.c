@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 14:47:25 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/09 16:33:56 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:01:17 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ int execute_command_controller(t_cmd *command, t_env_copy **env_list,
     }
     builtin_id = get_builtin_id(command->args[0]);
     if (builtin_id != NOT_A_BUILTIN_ID)
-       { printf ("ANAAAAAAAAAAHNA\n");
-		exit_status = execute_builtin_command(builtin_id, command, env_list);}
+		exit_status = execute_builtin_command(builtin_id, command, env_list);
     else // For external commands
 	{
 		executable_path = resolve_command_path(command->args[0], *env_list);

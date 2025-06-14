@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:15:19 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/09 15:49:14 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/14 15:55:05 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	exec_export(t_cmd *command, t_env_copy **env_list)
 	{
 		key = NULL;
 		value = NULL;
-		if (pars_export_arg(command->args[i], &key, &value))
+		if (!pars_export_arg(command->args[i], &key, &value))
 		{
 			set_env_value(env_list, key, value);
 			free(key);
