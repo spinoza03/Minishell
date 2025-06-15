@@ -6,11 +6,11 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 14:47:25 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/13 18:01:17 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:10:55 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/exec.h" // Adjust path as needed
+#include "../include/exec.h"
 
 int execute_command_controller(t_cmd *command, t_env_copy **env_list,
                                                             char **original_envp)

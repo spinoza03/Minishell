@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 18:56:53 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/09 15:50:11 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:30:07 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ t_builtin_id get_builtin_id(const char *cmd_name)
         return (BUILTIN_CD);
     else if (ft_strcmp(cmd_name, "export") == 0)
         return (BUILTIN_EXPORT);
-    // else if (ft_strcmp(cmd_name, "unset") == 0)
-    //     return (BUILTIN_UNSET);
+    else if (ft_strcmp(cmd_name, "unset") == 0)
+        return (BUILTIN_UNSET);
     else if (ft_strcmp(cmd_name, "env") == 0)
         return (BUILTIN_ENV);
-    // else if (ft_strcmp(cmd_name, "exit") == 0)
-    //     return (BUILTIN_EXIT);
-    return (NOT_A_BUILTIN_ID); // If no match, it's not a recognized built-in
+    else if (ft_strcmp(cmd_name, "exit") == 0)
+        return (BUILTIN_EXIT);
+    return (NOT_A_BUILTIN_ID);
 }
 
 int execute_builtin_command(t_builtin_id id, t_cmd *command, t_env_copy **env_list)
@@ -49,14 +49,14 @@ int execute_builtin_command(t_builtin_id id, t_cmd *command, t_env_copy **env_li
 	exit_status = exec_env(command, env_list);
 	else if (id == BUILTIN_EXPORT)
 	exit_status = exec_export(command, env_list);
-	// else if (id == BUILTIN_UNSET)
-	// exit_status = exec_unset(command, env_list);
-	// else if (id == BUILTIN_EXIT)
-	// exit_status = exec_exit(command);
-	else if (id == NOT_A_BUILTIN_ID) // Or if no other 'if' matched
-		exit_status = 127; // Command not found (should not happen if called right)
+	else if (id == BUILTIN_UNSET)
+	exit_status = exec_unset(command, env_list);
+	else if (id == BUILTIN_EXIT)
+	exit_status = exec_exit(command, env_list);
+	else if (id == NOT_A_BUILTIN_ID) 
+		exit_status = 127;
 	if (id != BUILTIN_CD && id != BUILTIN_EXPORT && id != BUILTIN_UNSET
-		&& id != BUILTIN_ENV && id != BUILTIN_EXIT /* add other env users */)
+		&& id != BUILTIN_ENV && id != BUILTIN_EXIT)
 		(void)env_list;
 	return (exit_status);
 }

@@ -74,6 +74,11 @@ void    free_cmd_structure(t_cmd *cmd);
 void create_env_list(t_env_copy **list_head, char **envp);
 
 /* FUNCTIONS */
+void restore_redirections(int original_fds[2]);
+int apply_redirections(t_cmd *command, int original_fds[2]);
+int exec_exit(t_cmd *command, t_env_copy **env_list);
+int	ft_atoi(const char *str);
+int	exec_unset(t_cmd *command, t_env_copy **env_list);
 void env_lstdel_one(t_env_copy **list_head, const char *key);
 int	exec_export(t_cmd *command, t_env_copy **env_list);
 char	*ft_strchr(const char *str, int c);

@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:15:19 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/14 15:55:05 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/14 17:17:51 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,25 @@ static int	pars_export_arg(char *arg, char **key, char **value)
 	}
 	return (0);
 }
+static int print_export_format(t_env_copy **env_list)
+{
+    t_env_copy *current;
+
+    current = *env_list;
+    while (current)
+    {
+        if (current->value != NULL)
+        {
+            write(1, "declare -x ", 11);
+            write(1, current->key, ft_strlen(current->key));
+            write(1, "=\"", 2);
+            write(1, current->value, ft_strlen(current->value));
+            write(1, "\"\n", 2);
+        }
+        current = current->next;
+    }
+    return (0);
+}
 
 int	exec_export(t_cmd *command, t_env_copy **env_list)
 {
@@ -48,7 +67,7 @@ int	exec_export(t_cmd *command, t_env_copy **env_list)
 	i = 1;
 	exit_status = 0;
 	if(!command->args[i])
-		return(exec_env(command, env_list));
+		return(print_export_format(env_list));
 	while (command->args[i])
 	{
 		key = NULL;

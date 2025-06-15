@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 13:09:57 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/04 16:25:42 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:33:36 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,9 @@ int	ft_strcmp(const char *str, const char *cmp)
 	i = 0;
 	if (!str)
 		return (0);
-	while (str[i] && cmp[i])
-	{
-		if (str[i] != cmp[i])
-			return (-1);
+	while (str[i] && str[i] == cmp[i])
 		i++;
-	}
-	return (0);
+	return ((unsigned char)str[i] - (unsigned char)cmp[i]);
 }
 
 char	*ft_strchr(const char *str, int c)
