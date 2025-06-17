@@ -5,6 +5,52 @@
 // according to your exec.h definition.
 // Your `parse_to_cmd.c` has a new_cmd that needs adjustment.
 // Use this logic for creating new t_cmd nodes.
+static t_redirs *new_redir_node(char *filename, t_tkn_type type)
+{
+    t_redirs *node;
+    
+    node = malloc(sizeof(t_redirs));
+    if (!node)
+        return (NULL);
+    node->filename = ft_strdup(filename); // Assuming you have ft_strdup from Libft
+    node->type = type;
+    node->next = NULL;
+    return (node);
+}
+
+// Adds a redirection node to the end of a redirection list
+static void add_redir_to_list(t_redirs **list, t_redirs *new_node)
+{
+    t_redirs *current;
+
+    if (!list || !new_node)
+        return;
+    if (!*list)
+    {
+        *list = new_node;
+        return;
+    }
+    current = *list;
+    while (current->next)
+        current = current->next;
+    current->next = new_node;
+}
+
+// Frees a list of redirection nodes
+static void free_redir_list(t_redirs *list)
+{
+    t_redirs *tmp;
+
+    while (list)
+    {
+        tmp = list->next;
+        free(list->filename);
+        free(list);
+        list = tmp;
+    }
+}
+
+// Your existing new_cmd function is fine
 t_cmd   *new_cmd_for_parser(void)
 {
     t_cmd   *cmd;
@@ -13,127 +59,136 @@ t_cmd   *new_cmd_for_parser(void)
     if (!cmd)
         return (NULL);
     cmd->args = NULL;
-    cmd->pre_redirs = NULL;  // As per your exec.h
-    cmd->post_redirs = NULL; // As per your exec.h
+    cmd->pre_redirs = NULL;
+    cmd->post_redirs = NULL;
     cmd->next = NULL;
     return (cmd);
 }
 
-// --- Helper: Free t_cmd Structure ---
-void    free_cmd_structure(t_cmd *cmd)
+// A more complete free_cmd_structure that handles pipelines and redirections
+void    free_cmd_structure(t_cmd *cmd_list)
 {
-    if (!cmd)
-        return;
+    t_cmd *tmp;
 
-    // Free the args array and its strings
-    if (cmd->args)
+    while (cmd_list)
     {
-        for (int i = 0; cmd->args[i] != NULL; i++)
+        tmp = cmd_list->next;
+        if (cmd_list->args)
         {
-            free(cmd->args[i]);
+            for (int i = 0; cmd_list->args[i]; i++)
+            {
+                free(cmd_list->args[i]);
+            }
+            free(cmd_list->args);
         }
-        free(cmd->args);
+        if (cmd_list->pre_redirs)
+            free_redir_list(cmd_list->pre_redirs);
+        if (cmd_list->post_redirs)
+            free_redir_list(cmd_list->post_redirs);
+        free(cmd_list);
+        cmd_list = tmp;
     }
-
-    // TODO: Later, you will need to free pre_redirs and post_redirs lists here
-    // if (cmd->pre_redirs) free_redirs_list(cmd->pre_redirs);
-    // if (cmd->post_redirs) free_redirs_list(cmd->post_redirs);
-    
-    // TODO: Later, if cmd->next is used for pipelines, you'll free the list
-    // if (cmd->next) free_cmd_structure(cmd->next); // Or an iterative free
-
-    free(cmd);
 }
 
 
-// --- Our Very Simple Parser (Simulates Friend's Parser for Single Commands) ---
-// Takes a line and returns a t_cmd structure.
-// For now, only handles space-separated arguments, no quotes, no pipes, no redirections.
-// Assumes the first word is the command (absolute path for Day 1).
-#define MAX_MOCK_ARGS 32 // Maximum arguments our simple parser will handle for one command
+// --- Main Parser Logic ---
 
-t_cmd   *simple_parser_to_cmd(char *line_input)
+#define MAX_ARGS_PER_CMD 128 // Max arguments for one command in a pipeline
+#define MAX_CMDS_IN_PIPE 32  // Max commands in a pipeline
+
+// This helper parses a single command string (a substring between pipes)
+// It identifies arguments and redirection tokens.
+static t_cmd *parse_single_command_segment(char *segment)
 {
-    t_cmd   *cmd_struct;
-    char    *line_copy;
-    char    *token;
-    char    **temp_args;
-    int     arg_count = 0;
+    t_cmd *cmd = new_cmd_for_parser();
+    char *token;
+    char **args = malloc(sizeof(char*) * MAX_ARGS_PER_CMD);
+    int arg_count = 0;
 
-	(void)temp_args;
+    token = strtok(segment, " \t\n\r");
+    while (token != NULL)
+    {
+        // Check for redirection tokens
+        if (strcmp(token, ">") == 0)
+        {
+            token = strtok(NULL, " \t\n\r");
+            if (token)
+                add_redir_to_list(&cmd->post_redirs, new_redir_node(token, red_out));
+        }
+        else if (strcmp(token, ">>") == 0)
+        {
+            token = strtok(NULL, " \t\n\r");
+            if (token)
+                add_redir_to_list(&cmd->post_redirs, new_redir_node(token, red_apnd));
+        }
+        else if (strcmp(token, "<") == 0)
+        {
+            token = strtok(NULL, " \t\n\r");
+            if (token)
+                add_redir_to_list(&cmd->pre_redirs, new_redir_node(token, red_in));
+        }
+        else if (strcmp(token, "<<") == 0) // --- ADDED THIS BLOCK ---
+        {
+            token = strtok(NULL, " \t\n\r"); // The next token is the DELIMITER
+            if (token)
+            {
+                // For heredoc, the "filename" is the delimiter.
+                // We create a node with the special HEREDOC type.
+                add_redir_to_list(&cmd->pre_redirs, new_redir_node(token, HEREDOC));
+            }
+        }
+        else
+        {
+            // It's a regular argument
+            args[arg_count++] = ft_strdup(token);
+        }
+        token = strtok(NULL, " \t\n\r");
+    }
+    args[arg_count] = NULL;
+    cmd->args = args;
+    return cmd;
+}
+
+// The main parser function that you call from main.c
+// It now handles pipes.
+t_cmd *simple_parser_to_cmd(char *line_input)
+{
+    char *line_copy;
+    char *command_segments[MAX_CMDS_IN_PIPE];
+    int cmd_count = 0;
+    char *segment_token;
+    t_cmd *head = NULL;
+    t_cmd *current_cmd = NULL;
+
     if (!line_input || !*line_input)
         return (NULL);
 
-    cmd_struct = new_cmd_for_parser();
-    if (!cmd_struct)
-        return (NULL);
+    line_copy = ft_strdup(line_input);
 
-    line_copy = ft_strdup(line_input); // strtok modifies the string, so we use a copy
-    if (!line_copy)
+    // First, split the entire line by the pipe '|' character
+    segment_token = strtok(line_copy, "|");
+    while (segment_token != NULL && cmd_count < MAX_CMDS_IN_PIPE)
     {
-        perror("minishell: ft_strdup for simple_parser");
-        free_cmd_structure(cmd_struct);
-        return (NULL);
+        command_segments[cmd_count++] = segment_token;
+        segment_token = strtok(NULL, "|");
     }
 
-    // First, count arguments to allocate exact space for cmd_struct->args
-    char *count_copy = ft_strdup(line_copy); // Another copy for counting
-    if (!count_copy) {
-        perror("minishell: ft_strdup for count_copy");
-        free(line_copy);
-        free_cmd_structure(cmd_struct);
-        return (NULL);
-    }
-    token = strtok(count_copy, " \t\n\r");
-    while (token != NULL)
+    // Now, parse each command segment individually
+    for (int i = 0; i < cmd_count; i++)
     {
-        arg_count++;
-        token = strtok(NULL, " \t\n\r");
-    }
-    free(count_copy);
-
-    if (arg_count == 0) // Empty line or only whitespace
-    {
-        free(line_copy);
-        free_cmd_structure(cmd_struct);
-        return (NULL);
-    }
-    
-    // Allocate the args array (+1 for NULL terminator)
-    cmd_struct->args = (char **)malloc(sizeof(char *) * (arg_count + 1));
-    if (!cmd_struct->args)
-    {
-        perror("minishell: malloc for args array");
-        free(line_copy);
-        free_cmd_structure(cmd_struct);
-        return (NULL);
-    }
-
-    // Now, populate the args array
-    arg_count = 0; // Reset for populating
-    token = strtok(line_copy, " \t\n\r"); // Use the first copy of the line
-    while (token != NULL && arg_count < MAX_MOCK_ARGS)
-    {
-        cmd_struct->args[arg_count] = ft_strdup(token);
-        if (!cmd_struct->args[arg_count])
+        t_cmd *new_node = parse_single_command_segment(command_segments[i]);
+        if (!head)
         {
-            perror("minishell: ft_strdup for argument");
-            // Free already ft_strdup'd args
-            for (int i = 0; i < arg_count; i++)
-                free(cmd_struct->args[i]);
-            free(cmd_struct->args); // Free the array itself
-            cmd_struct->args = NULL; // Avoid double free in free_cmd_structure
-            free(line_copy);
-            free_cmd_structure(cmd_struct);
-            return (NULL);
+            head = new_node;
+            current_cmd = head;
         }
-        arg_count++;
-        token = strtok(NULL, " \t\n\r");
+        else
+        {
+            current_cmd->next = new_node;
+            current_cmd = new_node;
+        }
     }
-    cmd_struct->args[arg_count] = NULL; // NULL-terminate the args array for execve
 
-    free(line_copy); // Free the duplicated input line
-
-    // cmd_struct->pre_redirs, post_redirs, and next are already NULL from new_cmd_for_parser
-    return (cmd_struct);
+    free(line_copy);
+    return (head);
 }

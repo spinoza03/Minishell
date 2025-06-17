@@ -1,83 +1,68 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirections.c                                     :+:      :+:    :+:   */
+/*   redirections_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/14 19:48:07 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/16 22:06:44 by ilallali         ###   ########.fr       */
+/*   Created: 2025/06/17 15:47:09 by ilallali          #+#    #+#             */
+/*   Updated: 2025/06/17 18:29:57 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/exec.h"
 
-static int handle_redir_append(const char *filename)
+int handle_redir_in(const char *filename)
 {
     int fd;
 
-    // O_APPEND: The key difference. It makes all writes go to the end of the file.
-    fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    // Open the file for READING only.
+    fd = open(filename, O_RDONLY);
     if (fd == -1)
     {
-        perror(filename);
-        return (1);
+        perror(filename); // e.g., "minishell: no_such_file.txt: No such file or directory"
+        return (1); // Failure
     }
-    if (dup2(fd, STDOUT_FILENO) == -1)
+    
+    // Redirect stdin (file descriptor 0) to the file descriptor of our opened file.
+    if (dup2(fd, STDIN_FILENO) == -1)
     {
         perror("minishell: dup2");
         close(fd);
-        return (1);
+        return (1); // Failure
     }
-    close(fd);
-    return (0);
-}
-
-static int process_redir_list(t_redirs *list)
-{
-    t_redirs *current;
-
-    current = list;
-    while (current)
-    {
-        if (current->type == red_out)
-        {
-            if (handle_redir_out(current->filename) != 0)
-                return (1);
-        }
-        else if (current->type == red_apnd) // Add this else if block
-        {
-            if (handle_redir_append(current->filename) != 0)
-                return (1);
-        }
-        // else if (current->type == red_in)   { /* TODO: handle < */ }
-
-        current = current->next;
-    }
+    
+    close(fd); // We can close the original fd now
     return (0); // Success
 }
-
-int apply_redirections(t_cmd *command, int original_fds[2])
+char *handle_heredoc_read(const char *delimiter)
 {
+    char    *line;
+    char    *temp_filename;
+    int     fd;
 
-    original_fds[0] = dup(STDIN_FILENO);
-    original_fds[1] = dup(STDOUT_FILENO);
-    if (original_fds[0] == -1 || original_fds[1] == -1)
+    temp_filename = ft_strdup("/tmp/minishell_heredoc"); // Using a fixed temp file
+    if (!temp_filename)
+        return (NULL);
+    fd = open(temp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+    if (fd == -1)
     {
-        perror("minishell: dup");
-        return (1);
+        perror("minishell: heredoc");
+        free(temp_filename);
+        return (NULL);
     }
-
-    (void)command;
-    return (0);
-}
-
-void restore_redirections(int original_fds[2])
-{
-    if (dup2(original_fds[0], STDIN_FILENO) == -1)
-        perror("minishell: dup2 restore stdin");
-    if (dup2(original_fds[1], STDOUT_FILENO) == -1)
-        perror("minishell: dup2 restore stdout");
-    close(original_fds[0]);
-    close(original_fds[1]);
+    while (1)
+    {
+        line = readline("> "); // The secondary prompt
+        if (!line || ft_strcmp(line, delimiter) == 0)
+        {
+            free(line);
+            break;
+        }
+        write(fd, line, ft_strlen(line));
+        write(fd, "\n", 1);
+        free(line);
+    }
+    close(fd);
+    return (temp_filename);
 }

@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/16 22:08:07 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:56:10 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@ void    free_cmd_structure(t_cmd *cmd);
 void create_env_list(t_env_copy **list_head, char **envp);
 
 /* FUNCTIONS */
+char *handle_heredoc_read(const char *delimiter);
+int handle_redir_in(const char *filename);
+// int	process_redir_list(t_redirs *list);
 void restore_redirections(int original_fds[2]);
 int apply_redirections(t_cmd *command, int original_fds[2]);
 int exec_exit(t_cmd *command, t_env_copy **env_list);
