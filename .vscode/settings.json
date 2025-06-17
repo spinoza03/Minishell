@@ -14,7 +14,8 @@
 		"type_traits": "c",
 		"utility": "c",
 		"types.h": "c",
-		"exec.h": "c"
+		"exec.h": "c",
+		"unistd.h": "c"
 	},
 	"functionHeaderExtension.headerFilePath": "/home/ilallali/Desktop/Minishell/include/exec.h"
 }

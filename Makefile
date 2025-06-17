@@ -1,13 +1,13 @@
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 NAME = minishell
 
 SRC = main.c execution/check_exec.c minipars.c parse_to_cmd.c utils/nodes_managemet.c builts/build_pwd.c \
 	builts/check_builts.c execution/creat_env.c execution/execute_external.c execution/execution_utils.c \
 	utils/nodes_2.c utils/env_utils.c func/funct1.c func/funct2.c func/funct3.c builts/build_echo.c \
 	builts/build_cd.c builts/build_env.c builts/build_export.c builts/build_enset.c func/funct4.c \
-	builts/build_exit.c
+	builts/build_exit.c execution/redirections.c
 
 OBJ = ${SRC:.c=.o}
 HEADER = include/exec.h
@@ -32,7 +32,7 @@ print_message:
 
 ${NAME}: ${OBJ}
 	@echo -e "\033[0;32mLinking objects to create ${NAME}...\033[0m"
-	${CC} ${CFLAGS} ${OBJ} -lreadline -g -fsanitize=address -o ${NAME}
+	${CC} ${CFLAGS} ${OBJ} -lreadline -o ${NAME}
 	@echo -e "\033[1;32mSuccessfully compiled ${NAME}!\033[0m"
 
 %.o: %.c ${HEADER}
