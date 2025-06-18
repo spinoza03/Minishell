@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/17 18:31:52 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:03:43 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int main(int argc, char **argv, char **envp)
             {
                 if (parsed_command->args && parsed_command->args[0])
                 {
-                    g_last_exit_status = execute_command_controller(parsed_command,
+                    g_last_exit_status = execute_pipeline(parsed_command,
                                                                  &shell_env_list, envp);
                 }
                 else if (!parsed_command->args) // Parser returned a command struct but no args array (e.g. only redirections)

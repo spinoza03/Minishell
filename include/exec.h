@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/17 15:56:10 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:36:26 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_env_copy {
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
+#include <signal.h> 
 #include <sys/wait.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -75,6 +76,7 @@ void    free_cmd_structure(t_cmd *cmd);
 void create_env_list(t_env_copy **list_head, char **envp);
 
 /* FUNCTIONS */
+int execute_pipeline(t_cmd *cmd_list, t_env_copy **env_list, char **original_envp);
 char *handle_heredoc_read(const char *delimiter);
 int handle_redir_in(const char *filename);
 // int	process_redir_list(t_redirs *list);
