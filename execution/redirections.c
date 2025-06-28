@@ -3,78 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 19:48:07 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/17 16:40:43 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/27 19:12:08 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/exec.h"
 
+// static int handle_redir_append(const char *filename)
+// {
+//     int fd;
+
+//     // O_APPEND: The key difference. It makes all writes go to the end of the file.
+//     fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+//     if (fd == -1)
+//     {
+//         perror(filename);
+//         return (1);
+//     }
+//     if (dup2(fd, STDOUT_FILENO) == -1)
+//     {
+//         perror("minishell: dup2");
+//         close(fd);
+//         return (1);
+//     }
+//     close(fd);
+//     return (0);
+// }
+
 static int handle_redir_out(const char *filename)
 {
     int fd;
 
+    printf("--- DEBUG: Handling > redirection for file: [%s]\n", filename);
     fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd == -1)
     {
         perror(filename);
         return (1);
     }
-    if (dup2(fd, STDOUT_FILENO) == -1)
-    {
-        perror("minishell: dup2");
-        close(fd);
-        return (1);
-    }
+    // ... rest of function ...
     close(fd);
     return (0);
 }
 
-static int handle_redir_append(const char *filename)
-{
-    int fd;
-
-    // O_APPEND: The key difference. It makes all writes go to the end of the file.
-    fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    if (fd == -1)
-    {
-        perror(filename);
-        return (1);
-    }
-    if (dup2(fd, STDOUT_FILENO) == -1)
-    {
-        perror("minishell: dup2");
-        close(fd);
-        return (1);
-    }
-    close(fd);
-    return (0);
-}
-
+// Add a debug print to this helper too
 static int process_redir_list(t_redirs *list)
 {
     t_redirs *current;
 
+    printf("--- DEBUG: Processing a redirection list ---\n");
     current = list;
     while (current)
     {
+        printf("--- DEBUG: Found a redirection node, type: %d\n", current->type);
         if (current->type == red_out)
         {
             if (handle_redir_out(current->filename) != 0)
                 return (1);
         }
-        else if (current->type == red_apnd)
-        {
-            if (handle_redir_append(current->filename) != 0)
-                return (1);
-        }
-        else if (current->type == red_in) // Add this else if block
-        {
-            if (handle_redir_in(current->filename) != 0)
-                return (1);
-        }
+        // ... else if blocks for other types ...
         current = current->next;
     }
     return (0);

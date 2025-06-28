@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 16:43:48 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/16 21:46:25 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/27 17:14:02 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,27 +82,25 @@ char *resolve_command_path(const char *command_name, t_env_copy *env_list)
 int set_env_value(t_env_copy **env_list, const char *key, const char *new_value)
 {
     t_env_copy *current;
-    char       *value_copy;
 
-    if (!env_list || !key || !new_value)
-        return (1); // Invalid arguments
     current = *env_list;
     while (current)
     {
         if (ft_strcmp(current->key, key) == 0)
         {
-            value_copy = ft_strdup(new_value);
-            if (!value_copy)
-                return (1);
-            free(current->value);
-            current->value = value_copy;
-            return (0);              
+            free(current->value); // Free the old value string
+            if (new_value) // If the new value is not NULL...
+                current->value = ft_strdup(new_value);
+            else // ...otherwise, set the pointer to NULL.
+                current->value = NULL;
+            // TODO: check strdup failure
+            return (0);
         }
         current = current->next;
     }
     t_env_copy *new_node = env_lstnew((char *)key, (char *)new_value);
     if (!new_node)
-        return (1); 
+        return (1);
     ft_lstadd_back(env_list, new_node);
-    return (0); 
+    return (0);
 }

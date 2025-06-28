@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nodes_managemet.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 17:09:01 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/03 16:16:23 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/27 17:10:39 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,15 @@ t_env_copy *env_lstnew(char *key_str, char *value_str)
     t_env_copy *new_node;
 
     new_node = (t_env_copy *)malloc(sizeof(t_env_copy));
-    if (!new_node) {
-        perror("minishell: malloc for env_lstnew");
+    if (!new_node)
         return (NULL);
-    }
     new_node->key = ft_strdup(key_str);
-    new_node->value = ft_strdup(value_str);
-    if (!new_node->key || !new_node->value) {
-        perror("minishell: ft_strdup in env_lstnew");
-        free(new_node->key);
+    if (value_str)
+        new_node->value = ft_strdup(value_str);
+    else
+        new_node->value = NULL;
+    if (!new_node->key)
+    {
         free(new_node->value);
         free(new_node);
         return (NULL);

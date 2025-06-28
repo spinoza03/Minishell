@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   creat_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 16:44:32 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/03 16:16:23 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/27 17:04:03 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int parse_env(const char *env_string, char **key_ptr, char **value_ptr)
             return (0);
         }
         strcpy(*key_ptr, env_string);
-        *value_ptr = ft_strdup(""); // Value is empty string
+        *value_ptr = ft_strdup("");
         if (!(*value_ptr))
         {
             perror("minishell: malloc for empty value (no '=')");
