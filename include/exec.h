@@ -6,127 +6,144 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/17 19:36:26 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/06/30 19:11:02 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
-typedef enum e_builtin_id
-{
-    NOT_A_BUILTIN_ID = 0,
-    BUILTIN_PWD,
-    BUILTIN_ECHO, // For later
-    BUILTIN_CD,   // For later
-    BUILTIN_EXPORT, // For later
-    BUILTIN_UNSET,  // For later
-    BUILTIN_ENV,    // For later
-    BUILTIN_EXIT    // For later
-} t_builtin_id;
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/types.h> // This header defines pid_t
+# include <sys/wait.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <signal.h>
+# include <errno.h>
+# include <fcntl.h>
+
+// --- Core Data Structures ---
 
 typedef enum e_tkn_type
-{      
-    red_in,    // < 
-	red_out,    // >    1
-    red_apnd,    // >>    2
-    HEREDOC        // <<    3
-}t_tkn_type;
-
+{
+	red_in,
+	red_out,
+	red_apnd,
+	HEREDOC
+}	t_tkn_type;
 
 typedef struct s_redirs
 {
-	char *filename;
-	t_tkn_type type;
-    struct s_redirs    *next;
-}t_redirs;
-
+	char			*filename;
+	t_tkn_type		type;
+	struct s_redirs	*next;
+}	t_redirs;
 
 typedef struct s_cmd
 {
-	char 		**args;          // command and its arguments: ["echo", "hello", NULL]
-	t_redirs 	*pre_redirs;
-	t_redirs 	*post_redirs;
-	struct s_cmd *next;   // for pipelines (| command | command | ...)
-} t_cmd;
+	char			**args;
+	t_redirs		*pre_redirs;
+	t_redirs		*post_redirs;
+	struct s_cmd	*next;
+}	t_cmd;
 
-typedef struct s_env_copy {
-    char                *key;   // Variable name (e.g., "PATH")
-    char                *value; // Variable value (e.g., "/usr/bin:/bin")
-    struct s_env_copy   *next;
-} t_env_copy;
+typedef struct s_env_copy
+{
+	char				*key;
+	char				*value;
+	struct s_env_copy	*next;
+}	t_env_copy;
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <signal.h> 
-#include <sys/wait.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+// NEW: Main shell data structure to avoid globals
+typedef struct s_shell
+{
+	t_env_copy	**env_list;
+	int			last_exit_status;
+	pid_t		child_pid;
+}	t_shell;
 
-t_cmd   *simple_parser_to_cmd(char *line_input);
-t_cmd   *new_cmd_for_parser(void);
-void    execute_this_one_command(char **args, char **envp);
-void    free_cmd_structure(t_cmd *cmd);
-void create_env_list(t_env_copy **list_head, char **envp);
 
-/* FUNCTIONS */
-int execute_pipeline(t_cmd *cmd_list, t_env_copy **env_list, char **original_envp);
-char *handle_heredoc_read(const char *delimiter);
-int handle_redir_in(const char *filename);
-// int	process_redir_list(t_redirs *list);
-void restore_redirections(int original_fds[2]);
-int apply_redirections(t_cmd *command, int original_fds[2]);
-int exec_exit(t_cmd *command, t_env_copy **env_list);
-int	ft_atoi(const char *str);
-int	exec_unset(t_cmd *command, t_env_copy **env_list);
-void env_lstdel_one(t_env_copy **list_head, const char *key);
-int	exec_export(t_cmd *command, t_env_copy **env_list);
-char	*ft_strchr(const char *str, int c);
-int	exec_env(t_cmd *command, t_env_copy **env_list);
-int	exec_cd(t_cmd *command, t_env_copy **env_list);
-int	set_env_value(t_env_copy **env_list, const char *key, const char *new_value);
-void	ft_putstr_fd(char *s, int fd);
-void	ft_putchar_fd(char c, int fd);
+// Enum for built-in command identification
+typedef enum e_builtin_id
+{
+	NOT_A_BUILTIN_ID = 0,
+	BUILTIN_PWD,
+	BUILTIN_ECHO,
+	BUILTIN_CD,
+	BUILTIN_EXPORT,
+	BUILTIN_UNSET,
+	BUILTIN_ENV,
+	BUILTIN_EXIT
+}	t_builtin_id;
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n);
-int exec_echo(t_cmd *command);
-int execute_external_command(const char *exec_path, t_cmd *command, char **original_envp);
-void ft_free_str_array(char **array);
-char	*ft_strcpy(char *dst, char *src);
-char *ft_strcat(char *dst, const char *src);
-char *resolve_command_path(const char *command_name, t_env_copy *env_list);
-int	ft_strcmp(const char *str, const char *cmp);
-size_t	ft_strlen(const char *s);
-void	*ft_memcpy(void *dst, const void *src, size_t n);
-char	*ft_strdup(const char *s);
-char	**ft_split(const char *s, char c);
-char *get_env_value(t_env_copy *env_list, const char *key);
-t_env_copy	*ft_lstlast(t_env_copy *lst);
-void	ft_lstadd_back(t_env_copy **lst, t_env_copy *new_node);
-void env_lstclear(t_env_copy **list_head);
-void del_env_node_content(t_env_copy *node);
-t_builtin_id get_builtin_id(const char *cmd_name);
-int execute_command_controller(t_cmd *command, t_env_copy **env_list,
-                                                            char **original_envp);
-void	exec_builtins(char *cmd, t_env_copy **env);
-int	check_builtins(char *cmd);
-int	exec_pwd(t_cmd *cmd);
-int	is_builtins(char *cmd, t_env_copy **env);
-t_env_copy *env_lstnew(char *key_str, char *value_str);
-void	ft_lstadd_front(t_env_copy **lst, t_env_copy *new);
-t_env_copy	*ft_lstlast(t_env_copy *lst);
-int	ft_lstsize(t_env_copy *lst);
+// --- FUNCTION PROTOTYPES (UPDATED & INCLUDING OLD ONES) ---
 
-//----------------------------------------------------------------
-int	execute_builtin_command(t_builtin_id id, t_cmd *command, t_env_copy **env_list);
-int execute_command_controller(t_cmd *command, t_env_copy **env_list, char **original_envp);
-void	child_process_execution(const char *exec_path, char **args, char **original_envp);
+// Main Setup and Loop
+void		initialize_signals(void);
+
+// Test Parser
+t_cmd		*simple_parser_to_cmd(char *line_input);
+void		free_cmd_structure(t_cmd *cmd_list);
+
+// Executor Engine (The new functions with updated signatures)
+int			execute_pipeline(t_cmd *cmd_list, t_shell *shell, char **original_envp);
+int			execute_command_controller(t_cmd *command, t_shell *shell, char **original_envp);
+int			execute_external_command(const char *exec_path, t_cmd *command, char **original_envp);
+char		*resolve_command_path(const char *command_name, t_env_copy *env_list);
+void    	child_process_execution(const char *exec_path, char **args, char **original_envp);
 int         parent_process_wait(pid_t pid);
-int parent_process_wait(pid_t pid);
+
+
+// Redirections
+int			apply_redirections(t_cmd *command, int original_fds[2]);
+void		restore_redirections(int original_fds[2]);
+char		*handle_heredoc_read(const char *delimiter);
+
+// Built-ins (New functions with updated signatures)
+t_builtin_id	get_builtin_id(const char *cmd_name);
+int				execute_builtin_command(t_builtin_id id, t_cmd *command, t_shell *shell);
+int				exec_echo(t_cmd *command);
+int				exec_pwd(t_cmd *command);
+int				exec_cd(t_cmd *command, t_shell *shell);
+int				exec_env(t_cmd *command, t_shell *shell);
+int				exec_export(t_cmd *command, t_shell *shell);
+int				exec_unset(t_cmd *command, t_shell *shell);
+int				exec_exit(t_cmd *command, t_shell *shell);
+
+// Environment and List Utilities
+void		create_env_list(t_env_copy **list_head, char **envp);
+void		env_lstclear(t_env_copy **list_head);
+t_env_copy	*env_lstnew(char *key_str, char *value_str);
+void		del_env_node_content(t_env_copy *node);
+void		ft_lstadd_back(t_env_copy **lst, t_env_copy *new_node);
+void		ft_lstadd_front(t_env_copy **lst, t_env_copy *new);
+t_env_copy	*ft_lstlast(t_env_copy *lst);
+int			ft_lstsize(t_env_copy *lst);
+char		*get_env_value(t_env_copy *env_list, const char *key);
+int			set_env_value(t_env_copy **env_list, const char *key, const char *new_value);
+void		env_lstdel_one(t_env_copy **list_head, const char *key);
+int			count_commands(t_cmd *cmd_list);
+
+// --- Libft Functions ---
+int			ft_strcmp(const char *s1, const char *s2);
+size_t		ft_strlen(const char *s);
+char		*ft_strdup(const char *s1);
+char		*ft_strchr(const char *s, int c);
+char		**ft_split(char const *s, char c);
+int			ft_atoi(const char *str);
+int 		ft_strncmp(const char *s1, const char *s2, size_t n);
+void    	ft_putstr_fd(char *s, int fd);
+void    	ft_putchar_fd(char c, int fd);
+char 		*ft_strcat(char *dst, const char *src);
+char    	*ft_strcpy(char *dst, char *src);
+
+// --- Obsolete / Old Functions (Kept as requested) ---
+void		execute_this_one_command(char **args, char **envp);
+void		exec_builtins(char *cmd, t_env_copy **env);
+int			check_builtins(char *cmd);
+int			is_builtins(char *cmd, t_env_copy **env);
+t_cmd		*new_cmd_for_parser(void);
 #endif

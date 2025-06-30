@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 19:48:07 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/27 19:12:08 by allali           ###   ########.fr       */
+/*   Updated: 2025/06/30 17:59:18 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static int handle_redir_out(const char *filename)
 {
     int fd;
 
-    printf("--- DEBUG: Handling > redirection for file: [%s]\n", filename);
     fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd == -1)
     {
@@ -54,11 +53,9 @@ static int process_redir_list(t_redirs *list)
 {
     t_redirs *current;
 
-    printf("--- DEBUG: Processing a redirection list ---\n");
     current = list;
     while (current)
     {
-        printf("--- DEBUG: Found a redirection node, type: %d\n", current->type);
         if (current->type == red_out)
         {
             if (handle_redir_out(current->filename) != 0)
