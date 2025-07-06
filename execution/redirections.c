@@ -6,32 +6,11 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 19:48:07 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/30 17:59:18 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/06 19:08:22 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/exec.h"
-
-// static int handle_redir_append(const char *filename)
-// {
-//     int fd;
-
-//     // O_APPEND: The key difference. It makes all writes go to the end of the file.
-//     fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-//     if (fd == -1)
-//     {
-//         perror(filename);
-//         return (1);
-//     }
-//     if (dup2(fd, STDOUT_FILENO) == -1)
-//     {
-//         perror("minishell: dup2");
-//         close(fd);
-//         return (1);
-//     }
-//     close(fd);
-//     return (0);
-// }
 
 static int handle_redir_out(const char *filename)
 {
@@ -43,33 +22,69 @@ static int handle_redir_out(const char *filename)
         perror(filename);
         return (1);
     }
-    // ... rest of function ...
+    if (dup2(fd, STDOUT_FILENO) == -1)
+    {
+        perror("minishell: dup2");
+        close(fd);
+        return (1);
+    }
     close(fd);
     return (0);
 }
 
-// Add a debug print to this helper too
+// Handles output append redirection ('>>')
+static int handle_redir_append(const char *filename)
+{
+    int fd;
+
+    fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    if (fd == -1)
+    {
+        perror(filename);
+        return (1);
+    }
+    if (dup2(fd, STDOUT_FILENO) == -1)
+    {
+        perror("minishell: dup2");
+        close(fd);
+        return (1);
+    }
+    close(fd);
+    return (0);
+}
+
+// This function now iterates through the list and calls the correct handler
 static int process_redir_list(t_redirs *list)
 {
     t_redirs *current;
+    int      error_status;
 
     current = list;
+    error_status = 0; // Assume success initially
     while (current)
     {
         if (current->type == red_out)
         {
             if (handle_redir_out(current->filename) != 0)
-                return (1);
+                error_status = 1; // Set error flag but continue
         }
-        // ... else if blocks for other types ...
+        else if (current->type == red_apnd)
+        {
+            if (handle_redir_append(current->filename) != 0)
+                error_status = 1; // Set error flag but continue
+        }
+        else if (current->type == red_in)
+        {
+             if (handle_redir_in(current->filename) != 0)
+                error_status = 1; // Set error flag but continue
+        }
         current = current->next;
     }
-    return (0);
+    return (error_status); // Return the final status after the loop
 }
 
 int apply_redirections(t_cmd *command, int original_fds[2])
 {
-    // First, save the original standard input and output file descriptors.
     original_fds[0] = dup(STDIN_FILENO);
     original_fds[1] = dup(STDOUT_FILENO);
     if (original_fds[0] == -1 || original_fds[1] == -1)
@@ -79,12 +94,12 @@ int apply_redirections(t_cmd *command, int original_fds[2])
     }
     if (!command)
         return (0);
-    if (process_redir_list(command->pre_redirs) != 0)
-        return (1); // An error occurred in one of the redirections
-    if (process_redir_list(command->post_redirs) != 0)
-        return (1); // An error occurred in one of the redirections
+    
+    // Process the single, ordered list of redirections.
+    if (process_redir_list(command->redirs) != 0)
+        return (1);
         
-    return (0); // All redirections were applied successfully
+    return (0);
 }
 
 void restore_redirections(int original_fds[2])

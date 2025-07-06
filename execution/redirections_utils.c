@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:47:09 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/06 16:44:26 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/06 18:50:44 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,20 @@ int handle_redir_in(const char *filename)
 {
     int fd;
 
-    // Open the file for READING only.
     fd = open(filename, O_RDONLY);
     if (fd == -1)
     {
-        perror(filename); // e.g., "minishell: no_such_file.txt: No such file or directory"
-        return (1); // Failure
+        perror(filename);
+        return (1);
     }
-    
-    // Redirect stdin (file descriptor 0) to the file descriptor of our opened file.
     if (dup2(fd, STDIN_FILENO) == -1)
     {
         perror("minishell: dup2");
         close(fd);
-        return (1); // Failure
+        return (1);
     }
-    
-    close(fd); // We can close the original fd now
-    return (0); // Success
+    close(fd);
+    return (0);
 }
 char *handle_heredoc_read(const char *delimiter)
 {
