@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/30 19:06:25 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/06 16:11:04 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv, char **envp)
     shell.child_pid = 0; // 0 means no child process is running.
     // ------------------------------------
 
-    initialize_signals();
+    // initialize_signals();
     create_env_list(shell.env_list, envp);
     
     while (1)

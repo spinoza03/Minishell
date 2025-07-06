@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/30 19:11:02 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/06 16:08:20 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,8 @@ int			ft_lstsize(t_env_copy *lst);
 char		*get_env_value(t_env_copy *env_list, const char *key);
 int			set_env_value(t_env_copy **env_list, const char *key, const char *new_value);
 void		env_lstdel_one(t_env_copy **list_head, const char *key);
-int			count_commands(t_cmd *cmd_list);
 
-// --- Libft Functions ---
+// Utility Functions
 int			ft_strcmp(const char *s1, const char *s2);
 size_t		ft_strlen(const char *s);
 char		*ft_strdup(const char *s1);
@@ -139,8 +138,10 @@ void    	ft_putstr_fd(char *s, int fd);
 void    	ft_putchar_fd(char c, int fd);
 char 		*ft_strcat(char *dst, const char *src);
 char    	*ft_strcpy(char *dst, char *src);
+void ft_free_str_array(char **array);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 
-// --- Obsolete / Old Functions (Kept as requested) ---
+// Command Execution
 void		execute_this_one_command(char **args, char **envp);
 void		exec_builtins(char *cmd, t_env_copy **env);
 int			check_builtins(char *cmd);
