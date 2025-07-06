@@ -59,13 +59,28 @@ t_cmd   *new_cmd_for_parser(void)
     if (!cmd)
         return (NULL);
     cmd->args = NULL;
-    cmd->pre_redirs = NULL;
-    cmd->post_redirs = NULL;
+    cmd->redirs = NULL; // Initialize the new single list
     cmd->next = NULL;
     return (cmd);
 }
 
 // A more complete free_cmd_structure that handles pipelines and redirections
+void free_string_array(char **array)
+{
+	int	i;
+
+	if (!array)
+		return;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+// Your updated free function for the command structure
 void    free_cmd_structure(t_cmd *cmd_list)
 {
     t_cmd *tmp;
@@ -73,18 +88,14 @@ void    free_cmd_structure(t_cmd *cmd_list)
     while (cmd_list)
     {
         tmp = cmd_list->next;
+        
+        // Use our new helper function to free the args
         if (cmd_list->args)
-        {
-            for (int i = 0; cmd_list->args[i]; i++)
-            {
-                free(cmd_list->args[i]);
-            }
-            free(cmd_list->args);
-        }
-        if (cmd_list->pre_redirs)
-            free_redir_list(cmd_list->pre_redirs);
-        if (cmd_list->post_redirs)
-            free_redir_list(cmd_list->post_redirs);
+            free_string_array(cmd_list->args);
+            
+        if (cmd_list->redirs)
+            free_redir_list(cmd_list->redirs);
+            
         free(cmd_list);
         cmd_list = tmp;
     }
@@ -106,40 +117,35 @@ static t_cmd *parse_single_command_segment(char *segment)
     int arg_count = 0;
 
     token = strtok(segment, " \t\n\r");
-    while (token != NULL)
+     while (token != NULL)
     {
-        // Check for redirection tokens
+        // Change ALL add_redir_to_list calls to use cmd->redirs
         if (strcmp(token, ">") == 0)
         {
             token = strtok(NULL, " \t\n\r");
             if (token)
-                add_redir_to_list(&cmd->post_redirs, new_redir_node(token, red_out));
+                add_redir_to_list(&cmd->redirs, new_redir_node(token, red_out));
         }
         else if (strcmp(token, ">>") == 0)
         {
             token = strtok(NULL, " \t\n\r");
             if (token)
-                add_redir_to_list(&cmd->post_redirs, new_redir_node(token, red_apnd));
+                add_redir_to_list(&cmd->redirs, new_redir_node(token, red_apnd));
         }
         else if (strcmp(token, "<") == 0)
         {
             token = strtok(NULL, " \t\n\r");
             if (token)
-                add_redir_to_list(&cmd->pre_redirs, new_redir_node(token, red_in));
+                add_redir_to_list(&cmd->redirs, new_redir_node(token, red_in));
         }
-        else if (strcmp(token, "<<") == 0) // --- ADDED THIS BLOCK ---
+        else if (strcmp(token, "<<") == 0)
         {
-            token = strtok(NULL, " \t\n\r"); // The next token is the DELIMITER
+            token = strtok(NULL, " \t\n\r");
             if (token)
-            {
-                // For heredoc, the "filename" is the delimiter.
-                // We create a node with the special HEREDOC type.
-                add_redir_to_list(&cmd->pre_redirs, new_redir_node(token, HEREDOC));
-            }
+                add_redir_to_list(&cmd->redirs, new_redir_node(token, HEREDOC));
         }
         else
         {
-            // It's a regular argument
             args[arg_count++] = ft_strdup(token);
         }
         token = strtok(NULL, " \t\n\r");
