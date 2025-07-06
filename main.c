@@ -6,36 +6,77 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/06 16:11:04 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/06 16:50:15 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
+
+static void handle_heredoc_read_child(const char *delimiter, const char *temp_filename)
+{
+    char    *line;
+    int     fd;
+
+    // Reset Ctrl-C to its default behavior for the heredoc reader
+    signal(SIGINT, SIG_DFL);
+
+    fd = open(temp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+    if (fd == -1)
+        exit(1); // Exit child with error status
+    while (1)
+    {
+        line = readline("> ");
+        if (!line || ft_strcmp(line, delimiter) == 0)
+        {
+            free(line);
+            break;
+        }
+        write(fd, line, ft_strlen(line));
+        write(fd, "\n", 1);
+        free(line);
+    }
+    close(fd);
+    exit(0); // Exit child successfully
+}
+
 static void process_heredocs(t_cmd *cmd_list)
 {
-	t_cmd		*current_cmd;
-	t_redirs	*current_redir;
-	char		*temp_file;
+    t_cmd       *current_cmd;
+    t_redirs    *current_redir;
+    char        *temp_file;
+    pid_t       pid;
+    int         status;
 
-	current_cmd = cmd_list;
-	while (current_cmd)
-	{
-		current_redir = current_cmd->pre_redirs;
-		while (current_redir)
-		{
-			if (current_redir->type == HEREDOC)
-			{
-				temp_file = handle_heredoc_read(current_redir->filename);
-				free(current_redir->filename);
-				current_redir->filename = temp_file;
-				current_redir->type = red_in;
-			}
-			current_redir = current_redir->next;
-		}
-		// TODO: You will need to add a similar loop for post_redirs here too.
-		current_cmd = current_cmd->next;
-	}
+    current_cmd = cmd_list;
+    while (current_cmd)
+    {
+        current_redir = current_cmd->pre_redirs;
+        while (current_redir)
+        {
+            if (current_redir->type == HEREDOC)
+            {
+                // Create a temporary filename.
+                temp_file = ft_strdup("/tmp/minishell_heredoc");
+                // Fork before reading the heredoc.
+                pid = fork();
+                if (pid == 0)
+                {
+                    // CHILD: Reads the heredoc and exits.
+                    handle_heredoc_read_child(current_redir->filename, temp_file);
+                }
+                // PARENT: Waits for the child to finish.
+                waitpid(pid, &status, 0);
+                // Now, transform the node into a simple input redirection.
+                free(current_redir->filename);
+                current_redir->filename = temp_file;
+                current_redir->type = red_in;
+            }
+            current_redir = current_redir->next;
+        }
+        // TODO: You will need to add a similar loop for post_redirs here too.
+        current_cmd = current_cmd->next;
+    }
 }
 
 
@@ -75,8 +116,6 @@ int main(int argc, char **argv, char **envp)
             if (parsed_command)
             {
                 process_heredocs(parsed_command);
-                // We now pass a pointer to our 'shell' struct to the executor.
-                // The executor will update shell.last_exit_status inside the struct.
                 execute_pipeline(parsed_command, &shell, envp);
                 free_cmd_structure(parsed_command);
             }
