@@ -80,7 +80,7 @@ void free_string_array(char **array)
 	free(array);
 }
 
-// Your updated free function for the command structure
+
 void    free_cmd_structure(t_cmd *cmd_list)
 {
     t_cmd *tmp;

@@ -151,6 +151,7 @@ int			is_builtins(char *cmd, t_env_copy **env);
 t_cmd		*new_cmd_for_parser(void);
 
 /* FUNCTIONS */
+void	set_execution_signals(void);
 int handle_redir_in(const char *filename);
 
 #endif

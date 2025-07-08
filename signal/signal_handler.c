@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 19:31:45 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/17 19:36:04 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:03:40 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,10 @@ void initialize_signals(void)
 
     // TODO later: We will also need to ignore SIGQUIT (Ctrl-\)
     // signal(SIGQUIT, SIG_IGN);
+}
+
+void	set_execution_signals(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }

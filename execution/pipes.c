@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 18:51:18 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/06 16:50:00 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:05:53 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ int    execute_pipeline(t_cmd *cmd_list, t_shell *shell,
     in_fd = STDIN_FILENO;
     last_pid = -1;
     shell->child_pid = 1; // Set flag that children are running
+	set_execution_signals();
     while (cmd_list)
     {
         if (cmd_list->next && pipe(pipe_fds) == -1)
@@ -156,6 +157,6 @@ int    execute_pipeline(t_cmd *cmd_list, t_shell *shell,
         cmd_list = cmd_list->next;
     }
     shell->last_exit_status = wait_for_pipeline(last_pid, count_commands(head));
-    shell->child_pid = 0; // Reset flag after all children are done
+	initialize_signals();
     return (shell->last_exit_status);
 }
