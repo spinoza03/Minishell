@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 19:31:45 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 13:37:08 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 14:20:33 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,12 @@
 
 void sigint_handler(int signum)
 {
-    // The subject is very specific about what can happen in a signal handler.
-    // We should not call complex functions like printf or malloc here.
-    // The functions allowed inside a handler are very limited.
-    // A safe approach is to just set a global flag, but for this specific
-    // "new prompt" behavior, we can use the functions provided by readline.
-    
-    (void)signum; // We don't need the signal number for this simple handler.
+    (void)signum;
 
-    write(1, "\n", 1); // Move to a new line
-    rl_on_new_line(); // Tell readline we are on a new line
-    rl_replace_line("", 0); // Replace the existing buffer with an empty string
-    rl_redisplay(); // Redisplay the prompt and the empty buffer
+    write(1, "\n", 1);
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
 }
 
 void initialize_signals(void)
