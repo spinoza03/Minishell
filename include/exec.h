@@ -142,6 +142,9 @@ void initialize_signals(void);
 void sigint_handler(int signum);
 
 /* FUNCTIONS */
+int	process_heredocs(t_cmd *cmd_list);
+int	execute_single_heredoc(t_redirs *redir);
+void handle_heredoc_read_child(const char *delimiter, const char *temp_filename);
 void	set_execution_signals(void);
 int handle_redir_in(const char *filename);
 
