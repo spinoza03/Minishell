@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/06 19:11:10 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:37:49 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ static void handle_heredoc_read_child(const char *delimiter, const char *temp_fi
     exit(0);
 }
 
-// MODIFIED VERSION: This now returns 1 if interrupted, 0 otherwise.
 static int process_heredocs(t_cmd *cmd_list)
 {
     t_cmd       *current_cmd;

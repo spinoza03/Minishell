@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   creat_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 16:44:32 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/27 17:04:03 by allali           ###   ########.fr       */
+/*   Updated: 2025/07/08 13:32:34 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int parse_env(const char *env_string, char **key_ptr, char **value_ptr)
         }
         return (1);
     }
-    else // Case: '=' was found
+    else
     {
         key_len = equal_sign_pos - env_string; 
         *key_ptr = (char *)malloc(key_len + 1);

@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 19:31:45 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 13:03:40 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:37:08 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,14 @@ void initialize_signals(void)
 {
     struct sigaction sa_int;
 
-    // Set up the handler for SIGINT (Ctrl-C)
     sa_int.sa_handler = sigint_handler;
-    sigemptyset(&sa_int.sa_mask); // Don't block any other signals during handling
+    sigemptyset(&sa_int.sa_mask);
     sa_int.sa_flags = 0;
-
-    // Apply the handler. If sigaction fails, print an error.
     if (sigaction(SIGINT, &sa_int, NULL) == -1)
     {
         perror("minishell: sigaction");
     }
-
-    // TODO later: We will also need to ignore SIGQUIT (Ctrl-\)
-    // signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 void	set_execution_signals(void)

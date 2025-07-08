@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 16:43:48 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/06 16:03:55 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:37:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,11 @@ int set_env_value(t_env_copy **env_list, const char *key, const char *new_value)
     {
         if (ft_strcmp(current->key, key) == 0)
         {
-            free(current->value); // Free the old value string
-            if (new_value) // If the new value is not NULL...
+            free(current->value);
+            if (new_value)
                 current->value = ft_strdup(new_value);
-            else // ...otherwise, set the pointer to NULL.
+            else
                 current->value = NULL;
-            // TODO: check strdup failure
             return (0);
         }
         current = current->next;

@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 18:51:18 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 13:05:53 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:34:24 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,41 +84,26 @@ static void    child_in_pipe(t_cmd *cmd, t_shell *shell, char **envp,
 {
     int    out_fd;
 
-    // This block determines where the output of this command should go.
-    // If there is another command after this one, send output to the pipe.
     if (cmd->next)
         out_fd = pipe_fds[1];
-    else // Otherwise, this is the last command, so send output to the screen.
+    else
         out_fd = STDOUT_FILENO;
-
-    // --- Set up I/O for the child ---
-
-    // 1. Reset signals to default behavior for the child process.
     signal(SIGINT, SIG_DFL);
     signal(SIGQUIT, SIG_DFL);
-
-    // 2. Redirect standard input if it's coming from a previous pipe.
     if (in_fd != STDIN_FILENO)
     {
         dup2(in_fd, STDIN_FILENO);
         close(in_fd);
     }
-    // 3. Redirect standard output if it's going to the next pipe.
     if (out_fd != STDOUT_FILENO)
     {
-        close(pipe_fds[0]); // Child doesn't read from its own output pipe.
+        close(pipe_fds[0]);
         dup2(out_fd, STDOUT_FILENO);
         close(out_fd);
     }
-
-    // 4. Now that pipes are set up, run the command controller.
-    //    The controller will handle file redirections (like > file.txt)
-    //    and then execute the command (built-in or external).
-    // 5. The child process exits with the status of the command.
     exit(execute_command_controller(cmd, shell, envp));
 }
 
-// The Main `execute_pipeline` Function
 int    execute_pipeline(t_cmd *cmd_list, t_shell *shell,
                         char **original_envp)
 {
@@ -130,7 +115,6 @@ int    execute_pipeline(t_cmd *cmd_list, t_shell *shell,
 
     head = cmd_list;
     builtin_id = get_builtin_id(cmd_list->args[0]);
-    // Special case for a single, parent-safe built-in command
     if (cmd_list->next == NULL && is_parent_builtin(builtin_id))
     {
         int original_fds[2];
@@ -139,10 +123,9 @@ int    execute_pipeline(t_cmd *cmd_list, t_shell *shell,
         restore_redirections(original_fds);
         return (shell->last_exit_status);
     }
-    // All other cases: pipelines or single commands that must be forked
     in_fd = STDIN_FILENO;
     last_pid = -1;
-    shell->child_pid = 1; // Set flag that children are running
+    shell->child_pid = 1;
 	set_execution_signals();
     while (cmd_list)
     {

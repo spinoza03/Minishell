@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:47:09 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/06 18:50:44 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:34:35 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char *handle_heredoc_read(const char *delimiter)
     char    *temp_filename;
     int     fd;
 
-    temp_filename = ft_strdup("/tmp/minishell_heredoc"); // Using a fixed temp file
+    temp_filename = ft_strdup("/tmp/minishell_heredoc");
     if (!temp_filename)
         return (NULL);
     fd = open(temp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
@@ -49,7 +49,7 @@ char *handle_heredoc_read(const char *delimiter)
     }
     while (1)
     {
-        line = readline("> "); // The secondary prompt
+        line = readline("> ");
         if (!line || ft_strcmp(line, delimiter) == 0)
         {
             free(line);

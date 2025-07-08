@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 19:48:07 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/06 19:08:22 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:34:55 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,27 +60,27 @@ static int process_redir_list(t_redirs *list)
     int      error_status;
 
     current = list;
-    error_status = 0; // Assume success initially
+    error_status = 0;
     while (current)
     {
         if (current->type == red_out)
         {
             if (handle_redir_out(current->filename) != 0)
-                error_status = 1; // Set error flag but continue
+                error_status = 1;
         }
         else if (current->type == red_apnd)
         {
             if (handle_redir_append(current->filename) != 0)
-                error_status = 1; // Set error flag but continue
+                error_status = 1;
         }
         else if (current->type == red_in)
         {
              if (handle_redir_in(current->filename) != 0)
-                error_status = 1; // Set error flag but continue
+                error_status = 1;
         }
         current = current->next;
     }
-    return (error_status); // Return the final status after the loop
+    return (error_status);
 }
 
 int apply_redirections(t_cmd *command, int original_fds[2])
@@ -94,11 +94,8 @@ int apply_redirections(t_cmd *command, int original_fds[2])
     }
     if (!command)
         return (0);
-    
-    // Process the single, ordered list of redirections.
     if (process_redir_list(command->redirs) != 0)
         return (1);
-        
     return (0);
 }
 
