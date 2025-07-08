@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 13:37:49 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:49:05 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int main(int argc, char **argv, char **envp)
             if (parsed_command)
             {
                 heredoc_interrupted = process_heredocs(parsed_command);
-                if (heredoc_interrupted == 0) // Only execute if not interrupted
+                if (heredoc_interrupted == 0)
                     execute_pipeline(parsed_command, &shell, envp);
                 free_cmd_structure(parsed_command);
             }

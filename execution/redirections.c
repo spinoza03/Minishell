@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 19:48:07 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 13:34:55 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 14:19:48 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static int handle_redir_out(const char *filename)
     return (0);
 }
 
-// Handles output append redirection ('>>')
 static int handle_redir_append(const char *filename)
 {
     int fd;
@@ -53,7 +52,6 @@ static int handle_redir_append(const char *filename)
     return (0);
 }
 
-// This function now iterates through the list and calls the correct handler
 static int process_redir_list(t_redirs *list)
 {
     t_redirs *current;

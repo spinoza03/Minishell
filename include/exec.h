@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/06 19:09:07 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:56:25 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,13 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <string.h>
-# include <sys/types.h> // This header defines pid_t
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
 # include <errno.h>
 # include <fcntl.h>
-
-// --- Core Data Structures ---
 
 typedef enum e_tkn_type
 {
@@ -142,13 +140,6 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 
 void initialize_signals(void);
 void sigint_handler(int signum);
-
-// Command Execution
-void		execute_this_one_command(char **args, char **envp);
-void		exec_builtins(char *cmd, t_env_copy **env);
-int			check_builtins(char *cmd);
-int			is_builtins(char *cmd, t_env_copy **env);
-t_cmd		*new_cmd_for_parser(void);
 
 /* FUNCTIONS */
 void	set_execution_signals(void);
