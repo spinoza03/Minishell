@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 13:10:06 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/06/16 17:56:15 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
 void	print_double_ptr(char **str)
 {
@@ -91,7 +91,8 @@ int main(int argc, char **argv, char **env) // wach ila m7iti env kamla wach get
 		add_history(input);
 		// add_node(&head, input);
 		// print_ptr(&head);
-		pars(&head, ft_strdup(&head, input), env);
+		pars(&head, ft_strdup1(&head, input), env);
+		// ur function
 		free(input);
 	}
 	return (0);

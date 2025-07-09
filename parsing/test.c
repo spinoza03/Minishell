@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 21:58:39 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/07 14:47:54 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
 t_cmd *init_new_cmd(t_ptr **head)
 {
     t_cmd *cmd = ft_mall(head, sizeof(t_cmd));
     cmd->args = NULL;
-    cmd->pre_redirs = NULL;
-    cmd->post_redirs = NULL;
+    // cmd->pre_redirs = NULL;
+    cmd->redirs = NULL;
     cmd->next = NULL;
     return cmd;
 }
@@ -52,7 +52,7 @@ void append_arg(t_ptr **head, char ***args, char *word)
 		i++;
 	}
 
-    new_args[count] = ft_strdup(head, word);
+    new_args[count] = ft_strdup1(head, word);
     new_args[count + 1] = NULL;
     *args = new_args;
 }

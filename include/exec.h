@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 13:56:25 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:49:12 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,27 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <pwd.h>
+# include <sys/types.h>
 # include <errno.h>
 # include <fcntl.h>
 
 typedef enum e_tkn_type
 {
-	red_in,
-	red_out,
-	red_apnd,
-	HEREDOC
-}	t_tkn_type;
+	NULL_Tk,	// 0
+	wrd,		// 1
+	PI,		// |	2
+	red_in,		// <	3
+	red_out,	// >	4
+	red_apnd,	// >>	5
+	HEREDOC		// <<	6
+}t_tkn_type;
+
+typedef struct s_ptr
+{
+	void        *ptr;
+	struct s_ptr *next;
+}t_ptr;
 
 typedef struct s_redirs
 {
@@ -39,6 +50,12 @@ typedef struct s_redirs
 	t_tkn_type		type;
 	struct s_redirs	*next;
 }	t_redirs;
+
+typedef struct s_env
+{
+	char			*var;
+	struct s_env	*next;
+}t_env;
 
 typedef struct s_cmd
 {
@@ -62,7 +79,12 @@ typedef struct s_shell
 	pid_t		child_pid;
 }	t_shell;
 
-
+typedef struct s_tkn
+{
+	char			*vl;
+	t_tkn_type		tkn_typ;
+	struct s_tkn	*next;
+}t_tkn;
 // Enum for built-in command identification
 typedef enum e_builtin_id
 {
@@ -147,5 +169,53 @@ int	execute_single_heredoc(t_redirs *redir);
 void handle_heredoc_read_child(const char *delimiter, const char *temp_filename);
 void	set_execution_signals(void);
 int handle_redir_in(const char *filename);
-
+//----------------------------------------------------------------------------------
+int	    	ft_atoi1(const char *str);
+size_t		ft_strlen(const char *s);
+char		*ft_strjoin1(t_ptr **head, char const *s1, char const *s2);
+char		*ft_strdup1(t_ptr **head, const char *s);
+void		*ft_memcpy1(void *dest, const void *src, size_t n);
+void		add_node(t_ptr **head, void *ptr);
+void    	*ft_mall(t_ptr **head, ssize_t size);
+void		ft_lstadd_back1(t_ptr **lst, t_ptr *new);
+void		ft_lstclear1(t_ptr **lst, void (*del)(void*));
+/*parsing starting*/
+t_cmd		*pars(t_ptr **head, char *input, char **env); //added env for the test
+int			check_q(char *input, int i);
+int			checker_synx(char *input, char check);
+int			first_q(char *input);
+void		ft_putstr_fd(char *s, int fd);
+int	    	invalid_sqnc(char *input);
+/**********************************************************************************************/
+int			is_qtd(char *input);
+void		ft_lstadd_back_tkn(t_tkn **lst, t_tkn *new);
+t_tkn_type	identify_tkn(char *val);
+int			splt_quoted(t_ptr **head, t_tkn **token, char *input, int *i);
+int			splt(t_ptr **head, t_tkn **token, char *input, int *i);
+void		creat_tkn_node(t_ptr **head, t_tkn **tkn_head, char *val, t_tkn_type type);
+/**********************************************************************************************/
+int 		handle_rdr(t_ptr **head, t_tkn **token, char *input, int *i);
+/**********************************************************************************************/
+int			expand_var(char *input, int *i, t_tkn **tkn_head, t_ptr **head_ptr);
+int			ft_isalnum(int c);
+char		*gt_nm(char *input, int *i, t_ptr **head);
+/**********************************************************************************************/
+						/*for setting the envirment to a singly linked list*/
+void		ft_lstadd_back_env(t_env **lst, t_env *new);
+t_env		*set_env_ls(t_ptr **head_ptr, char **env);
+void		set_node(t_env **head, t_ptr **ptr_head, char *env_val);
+/************************** getting var name **************************************************/
+char		*get_vr(t_env **head, t_ptr **head_ptr, char *name);
+char		*extract_vl(t_ptr **ptr_head, char *variable);
+int 		ft_strcmp_vr(char *s1, char *s2, size_t size);
+/************************** creating the cmd **************************************************/
+t_cmd		*parse_tokens_to_commands(t_ptr **head, t_tkn *tokens);
+t_cmd		*crt_cmd(t_ptr **ptr);
+/////////////////////////////////////////////////////////////////////////////////
+void		append_arg(t_ptr **head, char ***args, char *word);
+void append_redir(t_redirs **list, t_redirs *new_redir);
+t_cmd *init_new_cmd(t_ptr **head);
+//////////////////	FOR PRINTING	/////////////////////////////////////////////
+void print_cmd_list(t_cmd *cmd_list);
+void print_redirs(t_redirs *redir_list, const char *label);
 #endif

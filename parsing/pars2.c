@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pars2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 17:12:05 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/05/23 14:08:55 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
 int    invalid_sqnc(char *input)
 {

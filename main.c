@@ -6,12 +6,11 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 18:21:05 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:46:08 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exec.h"
-
+#include "exec.h"      // Your header with executor prototypes
 
 static void	init_shell(t_shell *shell, t_env_copy **env_list_head, char **envp)
 {
@@ -20,24 +19,24 @@ static void	init_shell(t_shell *shell, t_env_copy **env_list_head, char **envp)
 	shell->last_exit_status = 0;
 	shell->child_pid = 0;
 	initialize_signals();
+	// Pass shell->env_list directly. It's already the correct type (t_env_copy **).
 	create_env_list(shell->env_list, envp);
 }
 
-// Helper 2: This function remains unchanged.
-static void	process_input_line(char *line, t_shell *shell, char **envp)
+static void	process_input(char *line, t_shell *shell, char **envp)
 {
-	t_cmd	*parsed_command;
-	int		heredoc_interrupted;
+	t_ptr	*memory_head;
+	t_cmd	*command_list;
 
+	memory_head = NULL;
 	add_history(line);
-	parsed_command = simple_parser_to_cmd(line);
-	if (parsed_command)
+	command_list = pars(&memory_head, line, envp);
+	if (command_list)
 	{
-		heredoc_interrupted = process_heredocs(parsed_command);
-		if (heredoc_interrupted == 0)
-			execute_pipeline(parsed_command, shell, envp);
-		free_cmd_structure(parsed_command);
+		if (process_heredocs(command_list) == 0)
+			execute_pipeline(command_list, shell, envp);
 	}
+	ft_mall(&memory_head, -1);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -58,9 +57,10 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		if (*input_line)
-			process_input_line(input_line, &shell, envp);
+			process_input(input_line, &shell, envp);
 		free(input_line);
 	}
+	// Pass shell.env_list directly. It's also already the correct type.
 	env_lstclear(shell.env_list);
 	rl_clear_history();
 	return (shell.last_exit_status);

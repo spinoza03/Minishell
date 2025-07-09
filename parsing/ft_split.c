@@ -6,11 +6,11 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 21:03:15 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/09 15:27:14 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
 static size_t	ft_count_words(char const *s, char c)
 {
@@ -73,7 +73,7 @@ static	char	**ft_alloc(char **words, char const *s, char c, size_t size)
 	return (words);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split1(char const *s, char c)
 {
 	size_t	count;
 	char	**words;

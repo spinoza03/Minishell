@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pcollector.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:58:14 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/06/05 16:08:33 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:40:09 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
 void	add_node(t_ptr **head, void *ptr)
 {
@@ -29,7 +29,7 @@ void	add_node(t_ptr **head, void *ptr)
 		new_node->ptr = ptr;
 		new_node->next = NULL;
 	}
-	ft_lstadd_back(head, new_node);
+	ft_lstadd_back1(head, new_node);
 }
 
 void    *ft_mall(t_ptr **head, ssize_t size)
@@ -38,18 +38,18 @@ void    *ft_mall(t_ptr **head, ssize_t size)
 	// t_ptr	*new_node;
 
 	if (size <= 0)
-		return (ft_lstclear(head, free), exit(0), NULL);
+		return (ft_lstclear1(head, free), exit(0), NULL);
 	new_ptr = (void *)malloc(size);
 	if (!new_ptr)
-		return (ft_lstclear(head, free), NULL);
+		return (ft_lstclear1(head, free), NULL);
 	add_node(head, new_ptr);
 	// new_node = add_node(head, new_ptr);
 	// if (!new_node)
-	// 	return (ft_lstclear(head, free), NULL);
+	// 	return (ft_lstclear1(head, free), NULL);
 	return (new_ptr);
 }
 
-void	ft_lstadd_back(t_ptr **lst, t_ptr *new)
+void	ft_lstadd_back1(t_ptr **lst, t_ptr *new)
 {
 	t_ptr	*tmp;
 
@@ -100,7 +100,7 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new)
 	tmp->next = new;
 }
 
-void	ft_lstclear(t_ptr **lst, void (*del)(void*))
+void	ft_lstclear1(t_ptr **lst, void (*del)(void*))
 {
 	t_ptr	*temp;
 

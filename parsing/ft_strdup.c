@@ -6,13 +6,13 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 18:19:32 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/09 15:27:17 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
-char	*ft_strdup(t_ptr **head, const char *s)
+char	*ft_strdup1(t_ptr **head, const char *s)
 {
 	size_t	size;
 	char	*result;
@@ -23,7 +23,7 @@ char	*ft_strdup(t_ptr **head, const char *s)
 	result = ft_mall(head, size);
 	if (!result)
 		return (NULL);
-	ft_memcpy(result, s, ft_strlen(s));
+	ft_memcpy1(result, s, ft_strlen(s));
 	result[ft_strlen(s)] = '\0';
 	return (result);
 }

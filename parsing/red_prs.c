@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   red_prs.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 15:44:40 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/05/26 15:35:09 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:52:01 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
 char	*extr_qstr(t_ptr **head, char *str)
 {
@@ -38,15 +38,3 @@ char	*extr_qstr(t_ptr **head, char *str)
 	return (quoted);
 }
 
-int ft_strcmp(char *s1, char *s2)
-{
-	int i = 0;
-
-	while (s1[i] && s2[i])
-	{
-		if (s1[i] != s2[i])
-			return (s1[i] - s2[i]);
-		i++;
-	}
-	return (s1[i] - s2[i]);
-}

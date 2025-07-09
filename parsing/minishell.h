@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ../include.exec.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 15:30:55 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/09 15:26:58 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:23:50 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,25 +70,23 @@ typedef struct s_redirs
 }	t_redirs;
 
 typedef struct s_cmd
-{
+{=
 	char			**args;
-	t_redirs		*pre_redirs;
-	t_redirs		*post_redirs;
+	t_redirs		*redirs;
 	struct s_cmd	*next;
 }	t_cmd;
 
-
-int	    	ft_atoi(const char *str);
+int	    	ft_atoi1(const char *str);
 size_t		ft_strlen(const char *s);
-char		*ft_strjoin(t_ptr **head, char const *s1, char const *s2);
-char		*ft_strdup(t_ptr **head, const char *s);
-void		*ft_memcpy(void *dest, const void *src, size_t n);
+char		*ft_strjoin1(t_ptr **head, char const *s1, char const *s2);
+char		*ft_strdup1(t_ptr **head, const char *s);
+void		*ft_memcpy1(void *dest, const void *src, size_t n);
 void		add_node(t_ptr **head, void *ptr);
 void    	*ft_mall(t_ptr **head, ssize_t size);
-void		ft_lstadd_back(t_ptr **lst, t_ptr *new);
-void		ft_lstclear(t_ptr **lst, void (*del)(void*));
+void		ft_lstadd_back1(t_ptr **lst, t_ptr *new);
+void		ft_lstclear1(t_ptr **lst, void (*del)(void*));
 /*parsing starting*/
-void		pars(t_ptr **head, char *input, char **env); //added env for the test
+t_cmd		*pars(t_ptr **head, char *input, char **env); //added env for the test
 int			check_q(char *input, int i);
 int			checker_synx(char *input, char check);
 int			first_q(char *input);

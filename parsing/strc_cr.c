@@ -3,88 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   strc_cr.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 18:14:48 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/07 14:48:51 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
-t_cmd	*crt_cmd(t_ptr **ptr)
-{
-	t_cmd	*cmd;
+// t_cmd	*init_new_cmd(t_ptr **head)
+// {
+// 	t_cmd	*cmd;
 
-	cmd = NULL;
-	cmd = ft_mall(ptr, sizeof(t_cmd));
-	cmd->args = NULL;
-	cmd->post_redirs = NULL;
-	cmd->pre_redirs = NULL;
-	cmd->next = NULL;
-	return (cmd);
-}
+// 	cmd = ft_mall(head, sizeof(t_cmd));
+// 	cmd->args = NULL;
+// 	cmd->redirs = NULL; // Use the single redirections list
+// 	cmd->next = NULL;
+// 	return (cmd);
+// }
 
+// // Helper to append a redirection to a list.
+// // Also from your friend's 'test.c'
+// void append_redir(t_redirs **list, t_redirs *new_redir)
+// {
+// 	t_redirs	*tmp;
+
+// 	if (!*list)
+// 		*list = new_redir;
+// 	else
+// 	{
+// 		tmp = *list;
+// 		while (tmp->next)
+// 			tmp = tmp->next;
+// 		tmp->next = new_redir;
+// 	}
+// }
+
+
+// THE NEW, CORRECT PARSING LOGIC
 t_cmd	*parse_tokens_to_commands(t_ptr **head, t_tkn *tokens)
 {
-   t_cmd *cmd_list;
-    t_cmd *curr_cmd; 
+	t_cmd	*cmd_list;
+	t_cmd	*curr_cmd;
+	t_tkn	*current_token;
 
-    int redir_state;
-
-	cmd_list = NULL;
-	curr_cmd = NULL;
-	redir_state = 0;
-    while (tokens) {
-        if (tokens->tkn_typ == wrd) {
-            if (redir_state != 0) {
-                t_redirs *redir = ft_mall(head, sizeof(t_redirs));
-                redir->filename = ft_strdup(head, tokens->vl); 
-                if (redir_state == 1)
-                    redir->type = red_in;
-                else if (redir_state == 2)
-                    redir->type = red_out;
-                else if (redir_state == 3)
-                    redir->type = red_apnd;
-                else if (redir_state == 4)
-                    redir->type = HEREDOC;
-
-                redir->next = NULL;
-                if (redir_state == 1 || redir_state == 4)
-                    append_redir(&(curr_cmd->pre_redirs), redir);
-                else
-                    append_redir(&(curr_cmd->post_redirs), redir);
-
-                redir_state = 0;
-            } else {
-                if (!curr_cmd) {
-                    curr_cmd = init_new_cmd(head);
-                    cmd_list = curr_cmd;
-                }
-                append_arg(head, &(curr_cmd->args), tokens->vl);
-            }
-        }
-		else if (tokens->tkn_typ == red_in)
-            redir_state = 1;
-        else if (tokens->tkn_typ == red_out)
-            redir_state = 2;
-        else if (tokens->tkn_typ == red_apnd)
-            redir_state = 3;
-        else if (tokens->tkn_typ == HEREDOC)
-            redir_state = 4;
-        else if (tokens->tkn_typ == PI) {
-            t_cmd *new_cmd = init_new_cmd(head);
-
-            if (!cmd_list)
-                cmd_list = new_cmd;
-            else
-                curr_cmd->next = new_cmd;
-
-            curr_cmd = new_cmd;
-        }
-
-        tokens = tokens->next;
-    }
-
-    return cmd_list;
+	if (!tokens)
+		return (NULL);
+	cmd_list = init_new_cmd(head);
+	curr_cmd = cmd_list;
+	current_token = tokens;
+	while (current_token)
+	{
+		if (current_token->tkn_typ == PI)
+		{
+			curr_cmd->next = init_new_cmd(head);
+			curr_cmd = curr_cmd->next;
+		}
+		else if (current_token->tkn_typ >= red_in && current_token->tkn_typ <= HEREDOC)
+		{
+			t_redirs *redir = ft_mall(head, sizeof(t_redirs));
+			redir->type = current_token->tkn_typ;
+			if (current_token->next && current_token->next->tkn_typ == wrd)
+			{
+				redir->filename = ft_strdup1(head, current_token->next->vl);
+				current_token = current_token->next; // Skip the filename token
+			}
+			else
+			{
+				// Handle syntax error: redirection with no file
+				redir->filename = ft_strdup1(head, "");
+			}
+			redir->next = NULL;
+			append_redir(&(curr_cmd->redirs), redir);
+		}
+		else if (current_token->tkn_typ == wrd)
+		{
+			append_arg(head, &(curr_cmd->args), current_token->vl);
+		}
+		current_token = current_token->next;
+	}
+	return (cmd_list);
 }

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pars4.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 17:12:43 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/06/13 17:22:33 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
 int	ft_isalnum(int c)
 {
@@ -39,7 +39,7 @@ void	set_node(t_env **head, t_ptr **ptr_head, char *env_val)
 	t_env	*node;
 
 	node = ft_mall(ptr_head, sizeof(t_env));
-	node->var = ft_strdup(ptr_head, env_val);
+	node->var = ft_strdup1(ptr_head, env_val);
 	if (!node->var)
 	{
 		ft_mall(ptr_head, 0);
@@ -226,7 +226,7 @@ char	*get_vr(t_env **head, t_ptr **head_ptr, char *name)
 	{
 		if (tmp->var && !(ft_strcmp_vr(tmp->var, name, size)))
 		{
-			str = ft_strdup(head_ptr, tmp->var);
+			str = ft_strdup1(head_ptr, tmp->var);
 			return (str);
 		}
 		tmp = tmp->next;

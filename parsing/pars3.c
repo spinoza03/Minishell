@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pars3.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:09:53 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/06/16 18:53:51 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/exec.h"
 
 static void cpy(char *vl, char *input, int pos, int len)
 {
@@ -85,7 +85,7 @@ int	expand_var(char *input, int *i, t_tkn **tkn_head, t_ptr **head_ptr)
 
 	(*i)++;
 	nm = gt_nm(input, i, head_ptr);
-	env = ft_strdup(head_ptr, getenv(nm));
+	env = ft_strdup1(head_ptr, getenv(nm));
 	if (!env)
 	{
 		(*i)++;
