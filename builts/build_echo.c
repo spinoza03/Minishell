@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:43:29 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/09 12:08:14 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/10 16:57:05 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,16 @@ static int	check_n(char *str)
 	int	i;
 
 	i = 1;
+	if (str[i] == '\0')
+		return (1);
 	while (str[i])
 	{
-		if((str[i] == 'n'))
+		if (str[i] == 'n')
 			i++;
 		else
 			return (1);
 	}
-	return (0);	
+	return (0);
 }
 
 static int check_n_option(char **arg, int *first_arg_idx)

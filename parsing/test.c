@@ -6,53 +6,53 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 21:58:39 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/10 00:15:13 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/exec.h"
 
-t_cmd *init_new_cmd(t_ptr **head)
-{
-    t_cmd *cmd = ft_mall(head, sizeof(t_cmd));
-    cmd->args = NULL;
-    // cmd->pre_redirs = NULL;
-    cmd->redirs = NULL;
-    cmd->next = NULL;
-    return cmd;
-}
+// t_cmd *init_new_cmd(t_ptr **head)
+// {
+//     t_cmd *cmd = ft_mall(head, sizeof(t_cmd));
+//     cmd->args = NULL;
+//     // cmd->pre_redirs = NULL;
+//     cmd->redirs = NULL;
+//     cmd->next = NULL;
+//     return cmd;
+// }
 
-void append_redir(t_redirs **list, t_redirs *new_redir)
-{
-    if (!*list)
-        *list = new_redir;
-    else {
-        t_redirs *tmp = *list;
-        while (tmp->next)
-            tmp = tmp->next;
-        tmp->next = new_redir;
-    }
-}
+// void append_redir(t_redirs **list, t_redirs *new_redir)
+// {
+//     if (!*list)
+//         *list = new_redir;
+//     else {
+//         t_redirs *tmp = *list;
+//         while (tmp->next)
+//             tmp = tmp->next;
+//         tmp->next = new_redir;
+//     }
+// }
 
-void append_arg(t_ptr **head, char ***args, char *word)
-{
-    int count = 0;
-	int i = 0;
+// void append_arg(t_ptr **head, char ***args, char *word)
+// {
+//     int count = 0;
+// 	int i = 0;
 
-    if (*args) {
-        while ((*args)[count])
-            count++;
-    }
+//     if (*args) {
+//         while ((*args)[count])
+//             count++;
+//     }
 
-    char **new_args = ft_mall(head, (sizeof(char *) * (count + 2)));
+//     char **new_args = ft_mall(head, (sizeof(char *) * (count + 2)));
 
-    while (i < count)
-	{
-        new_args[i] = (*args)[i];
-		i++;
-	}
+//     while (i < count)
+// 	{
+//         new_args[i] = (*args)[i];
+// 		i++;
+// 	}
 
-    new_args[count] = ft_strdup1(head, word);
-    new_args[count + 1] = NULL;
-    *args = new_args;
-}
+//     new_args[count] = ft_strdup1(head, word);
+//     new_args[count + 1] = NULL;
+//     *args = new_args;
+// }

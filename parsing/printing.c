@@ -6,53 +6,59 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 22:03:44 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/10 00:21:23 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/exec.h"
 
-#include <stdio.h>
+void	print_cmd_list_debug(t_cmd *cmd_list);
 
-// Function to print redirections (pre_redirs or post_redirs)
-void print_redirs(t_redirs *redir_list, const char *label) {
-    while (redir_list) {
-        printf("    %s: filename='%s', type=%d\n", label, redir_list->filename, redir_list->type);
-        redir_list = redir_list->next;
-    }
+static void	print_redirs(t_redirs *redir_list)
+{
+	t_redirs	*current;
+	int			i;
+
+	current = redir_list;
+	i = 0;
+	while (current)
+	{
+		printf("    -> Redir[%d]: type=%d, filename='%s'\n",
+			i, current->type, current->filename);
+		current = current->next;
+		i++;
+	}
 }
 
-// Function to print the t_cmd linked list
-void print_cmd_list(t_cmd *cmd_list) {
-    int cmd_num = 1;
+void	print_cmd_list_debug(t_cmd *cmd_list)
+{
+	t_cmd	*current_cmd;
+	int		i;
+	int		j;
 
-    while (cmd_list) {
-        printf("=== Command #%d ===\n", cmd_num);
-
-        // Print arguments
-        if (cmd_list->args) {
-            printf("  args: ");
-            for (int i = 0; cmd_list->args[i]; i++) {
-                printf("'%s' ", cmd_list->args[i]);
-            }
-            printf("\n");
-        } else {
-            printf("  args: (none)\n");
-        }
-
-        // Print redirections
-        if (cmd_list->pre_redirs)
-            print_redirs(cmd_list->pre_redirs, "pre_redir");
-        else
-            printf("  pre_redirs: (none)\n");
-
-        if (cmd_list->post_redirs)
-            print_redirs(cmd_list->post_redirs, "post_redir");
-        else
-            printf("  post_redirs: (none)\n");
-
-        // Move to next command
-        cmd_list = cmd_list->next;
-        cmd_num++;
-    }
+	printf("--- DEBUG: Parsed Command List ---\n");
+	current_cmd = cmd_list;
+	i = 0;
+	while (current_cmd)
+	{
+		printf("  Command[%d]:\n", i);
+		if (current_cmd->args)
+		{
+			j = 0;
+			while (current_cmd->args[j])
+			{
+				printf("    - Arg[%d]: '%s'\n", j, current_cmd->args[j]);
+				j++;
+			}
+		}
+		else
+			printf("    - Args: (null)\n");
+		if (current_cmd->redirs)
+			print_redirs(current_cmd->redirs);
+		else
+			printf("    - Redirs: (none)\n");
+		current_cmd = current_cmd->next;
+		i++;
+	}
+	printf("------------------------------------\n");
 }

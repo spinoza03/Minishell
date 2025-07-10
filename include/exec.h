@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/09 23:49:12 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/10 16:08:01 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,12 +164,16 @@ void initialize_signals(void);
 void sigint_handler(int signum);
 
 /* FUNCTIONS */
+int	ft_isalpha(int c);
+char	*ft_strjoin(char const *s1, char const *s2);
+void	cleanup_heredocs(t_cmd *cmd_list);
+void	print_cmd_list_debug(t_cmd *cmd_list);;
 int	process_heredocs(t_cmd *cmd_list);
 int	execute_single_heredoc(t_redirs *redir);
 void handle_heredoc_read_child(const char *delimiter, const char *temp_filename);
 void	set_execution_signals(void);
 int handle_redir_in(const char *filename);
-//----------------------------------------------------------------------------------
+//------------------parsing mohsin----------------------------------------------------------------
 int	    	ft_atoi1(const char *str);
 size_t		ft_strlen(const char *s);
 char		*ft_strjoin1(t_ptr **head, char const *s1, char const *s2);
@@ -216,6 +220,5 @@ void		append_arg(t_ptr **head, char ***args, char *word);
 void append_redir(t_redirs **list, t_redirs *new_redir);
 t_cmd *init_new_cmd(t_ptr **head);
 //////////////////	FOR PRINTING	/////////////////////////////////////////////
-void print_cmd_list(t_cmd *cmd_list);
-void print_redirs(t_redirs *redir_list, const char *label);
+
 #endif

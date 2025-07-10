@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:18:56 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 15:19:27 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/10 15:01:02 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int	execute_single_heredoc(t_redirs *redir)
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		return (1);
-	free(redir->filename);
 	redir->filename = ft_strdup("/tmp/heredoc_tmp");
 	if (!redir->filename)
 		return (1);
@@ -82,4 +81,26 @@ int	process_heredocs(t_cmd *cmd_list)
 		current_cmd = current_cmd->next;
 	}
 	return (0);
+}
+
+void	cleanup_heredocs(t_cmd *cmd_list)
+{
+	t_cmd		*current_cmd;
+	t_redirs	*redir;
+
+	current_cmd = cmd_list;
+	while (current_cmd)
+	{
+		redir = current_cmd->redirs;
+		while (redir)
+		{
+			if (redir->type == red_in && ft_strcmp(redir->filename, "/tmp/heredoc_tmp") == 0)
+			{
+				free(redir->filename);
+				redir->filename = NULL; 
+			}
+			redir = redir->next;
+		}
+		current_cmd = current_cmd->next;
+	}
 }

@@ -4,13 +4,13 @@ CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 NAME = minishell
 
 SRC = main.c execution/check_exec.c parse_to_cmd.c utils/nodes_managemet.c builts/build_pwd.c \
-	builts/check_builts.c execution/creat_env.c execution/execute_external.c execution/execution_utils.c \
+	builts/check_builts.c execution/creat_env.c  \
 	utils/nodes_2.c utils/env_utils.c func/funct1.c func/funct2.c func/funct3.c builts/build_echo.c \
 	builts/build_cd.c builts/build_env.c builts/build_export.c builts/build_enset.c func/funct4.c \
 	builts/build_exit.c execution/redirections.c execution/redirections_utils.c execution/pipes.c \
 	signal/signal_handler.c utils/heredoc.c parsing/ft_strdup.c  parsing/ft_memcpy.c  \
     parsing/ft_pcollector.c  parsing/pars.c  parsing/pars2.c  parsing/pars3.c  parsing/red_prs.c  parsing/pars4.c \
-	parsing/strc_cr.c parsing/test.c
+	parsing/strc_cr.c parsing/test.c parsing/printing.c
 
 OBJ = ${SRC:.c=.o}
 HEADER = include/exec.h

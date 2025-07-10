@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:58:14 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/09 23:40:09 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/10 00:32:40 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,21 @@ void	add_node(t_ptr **head, void *ptr)
 void    *ft_mall(t_ptr **head, ssize_t size)
 {
 	void    *new_ptr;
-	// t_ptr	*new_node;
 
 	if (size <= 0)
-		return (ft_lstclear1(head, free), exit(0), NULL);
+	{
+		ft_lstclear1(head, free);
+		if (size == -1) // If called from main loop to clean up
+			return (NULL);
+		exit(1); // Exit only on a true allocation error (size=0)
+	}
 	new_ptr = (void *)malloc(size);
 	if (!new_ptr)
-		return (ft_lstclear1(head, free), NULL);
+	{
+		ft_lstclear1(head, free);
+		exit(1);
+	}
 	add_node(head, new_ptr);
-	// new_node = add_node(head, new_ptr);
-	// if (!new_node)
-	// 	return (ft_lstclear1(head, free), NULL);
 	return (new_ptr);
 }
 
