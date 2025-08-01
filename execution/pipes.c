@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 18:51:18 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/10 00:33:03 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/01 16:28:56 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,10 @@ int    execute_pipeline(t_cmd *cmd_list, t_shell *shell,
     t_builtin_id    builtin_id;
 
     head = cmd_list;
-    builtin_id = get_builtin_id(cmd_list->args[0]);
+  	if (cmd_list->args)
+        builtin_id = get_builtin_id(cmd_list->args[0]);
+    else
+        builtin_id = NOT_A_BUILTIN_ID; 
     if (cmd_list->next == NULL && is_parent_builtin(builtin_id))
     {
         int original_fds[2];
