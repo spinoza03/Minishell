@@ -1,6 +1,6 @@
 echo $?
 
-ls | | wc
+ls | | wc // fixed
 
 /// empty heredoc ctrl=c signal
  << "" cat
@@ -20,7 +20,7 @@ bash: export: `123+=': not a valid identifier
 bash-5.2$ export 123+=
 
 
-bash-5.2$ echo - - - -  -n -n -nnnn -n a
+bash-5.2$ echo - - - -  -n -n -nnnn -n a // fixed
 - - - - -n -n -nnnn -n a
 
 
@@ -31,13 +31,13 @@ PATH
 bash-5.2$ unset PATH
 bash-5.2$ ls
 
-minishell> ""
+minishell> "" // fixed and '' too
 =================================================================
 ==2258==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50200000420f at pc 0x5577e0e971b1 bp 0x7fff385f9350 sp 0x7fff385f9340
 
 
 
-minishell> #""
+minishell> #"" //fixed
 cat: '': No such file or directory
 minishell: #: command not found
 
@@ -54,5 +54,5 @@ a
 ls:  whitespaces
 
 l$a""s
-cat: '': No such file or directory
+cat: '': No such file or directory // fixed
 minishell: a: command not found

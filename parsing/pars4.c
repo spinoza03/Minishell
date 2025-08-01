@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars4.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 17:12:43 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/19 01:24:54 by mteffahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,87 @@ t_env	*set_env_ls(t_ptr **head_ptr, char **env)
 // 	// Default case - strings don't match
 // 	return (env_var[i] - name[i]);
 // }
+/***************************************** */
+// char	*extract_vl(t_ptr **ptr_head, t_env_copy **env_head, char *var_name)
+// {
+// 	t_env_copy	*tmp;
+// 	char		*value;
+// 	size_t		name_len;
+
+// 	if (!var_name || !env_head || !*env_head)
+// 		return (NULL);
+	
+// 	tmp = *env_head;
+// 	name_len = ft_strlen(var_name);
+	
+// 	// Find the variable in the environment list
+// 	while (tmp)
+// 	{
+// 		if (tmp->key && !(ft_strcmp_vr(tmp->key, var_name, name_len)))
+// 		{
+// 			// Found the variable, now extract and return its value
+// 			if (tmp->value)
+// 				value = ft_mall(ptr_head, ft_strlen(tmp->value) + 1);
+// 			else
+// 				value = ft_mall(ptr_head, 1);  // Empty string
+			
+// 			if (!value)
+// 				return (NULL);
+			
+// 			if (tmp->value)
+// 				ft_strcpy(value, tmp->value);
+// 			else
+// 				value[0] = '\0';  // Empty string
+			
+// 			return (value);
+// 		}
+// 		tmp = tmp->next;
+// 	}
+	
+// 	// Variable not found
+// 	return (NULL);
+// }
+
+// Debug version of extract_vl
+char	*extract_vl(t_ptr **ptr_head, t_env_copy **env_head, char *var_name)
+{
+	t_env_copy	*tmp;
+	char		*value;
+	size_t		name_len;
+
+	
+	if (!var_name || !env_head || !*env_head)
+		return (NULL);
+	
+	tmp = *env_head;
+	name_len = ft_strlen(var_name);
+	
+	// Find the variable in the environment list
+	while (tmp)
+	{
+		if (tmp->key && !(ft_strcmp_vr(tmp->key, var_name, name_len)))
+		{
+			// Found the variable, now extract and return its value
+			if (tmp->value)
+				value = ft_mall(ptr_head, ft_strlen(tmp->value) + 1);
+			else
+				value = ft_mall(ptr_head, 1);  // Empty string
+			
+			if (!value)
+				return (NULL);
+			
+			if (tmp->value)
+				ft_strcpy(value, tmp->value);
+			else
+				value[0] = '\0';  // Empty string
+			
+			return (value);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 
 // Alternative simpler version if you prefer:
 int ft_strcmp_vr(char *env_var, char *name, size_t name_len)
@@ -176,61 +257,126 @@ int ft_strcmp_vr(char *env_var, char *name, size_t name_len)
 	
 	return (1); // No match
 }
+/*old one */
+// char	*extract_vl(t_ptr **ptr_head, char *variable)
+// {
+// 	int		i;
+// 	char	*value;
+// 	int		len;
 
-char	*extract_vl(t_ptr **ptr_head, char *variable)
-{
-	int		i;
-	char	*value;
-	int		len;
-
-	i = 0;
-	if (!variable)
-		printf("NULL\n");
-	if (!variable)  // Return early if variable is NULL
-		return (NULL);
-	// Skip to the first quote or '=' sign (assuming format VAR="value" or VAR=value)
-	while (variable[i] && variable[i] != '=' && variable[i] != '"')
-		i++;
+// 	i = 0;
+// 	if (!variable)
+// 		printf("NULL");
+// 	if (!variable)  // Return early if variable is NULL
+// 		return (NULL);
+// 	// Skip to the first quote or '=' sign (assuming format VAR="value" or VAR=value)
+// 	while (variable[i] && variable[i] != '=' && variable[i] != '"')
+// 		i++;
 	
-	// If we found '=', move past it
-	if (variable[i] == '=')
-		i++;
-	if (variable[i] == '"')
-		i++;
-	len = i;
-	while (variable[len] && variable[len] != '"')
-		len++;
-	value = ft_mall(ptr_head, ((len  - i )+ 1));
-	int j = 0;
-	while (i < len && variable[i])
-	{
-		value[j] = variable[i];
-		j++;
-		i++;
-	}
-	value[j] = '\0';
-	return (value);
-}
+// 	// If we found '=', move past it
+// 	if (variable[i] == '=')
+// 		i++;
+// 	if (variable[i] == '"')
+// 		i++;
+// 	len = i;
+// 	while (variable[len] && variable[len] != '"')
+// 		len++;
+// 	value = ft_mall(ptr_head, ((len  - i )+ 1));
+// 	int j = 0;
+// 	while (i < len && variable[i])
+// 	{
+// 		value[j] = variable[i];
+// 		j++;
+// 		i++;
+// 	}
+// 	value[j] = '\0';
+// 	return (value);
+// }
 
-char	*get_vr(t_env **head, t_ptr **head_ptr, char *name)
+/*old one */
+// char	*get_vr(t_env **head, t_ptr **head_ptr, char *name)
+// {
+// 	t_env	*tmp;
+// 	char	*str;
+// 	size_t	size;
+
+// 	if (!head || !*head || !name)  // Add null checks
+// 		return (NULL);
+// 	tmp = *head;
+// 	size = ft_strlen(name);
+// 	while (tmp)
+// 	{
+// 		if (tmp->var && !(ft_strcmp_vr(tmp->var, name, size)))
+// 		{
+// 			str = ft_strdup1(head_ptr, tmp->var);
+// 			return (str);
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// 	return (NULL);
+// }
+
+// char	*get_vr(t_env_copy **head, t_ptr **head_ptr, char *name)
+// {
+// 	t_env_copy	*tmp;
+// 	char		*str;
+// 	size_t		name_len;
+
+// 	if (!head || !*head || !name)
+// 		return (NULL);
+	
+// 	tmp = *head;
+// 	name_len = ft_strlen(name);
+	
+// 	while (tmp)
+// 	{
+// 		if (tmp->key && !(ft_strcmp_vr(tmp->key, name, name_len)))
+// 		{
+// 			// Return just the value part
+// 			if (tmp->value)
+// 				str = ft_strdup1(head_ptr, tmp->value);
+// 			else
+// 				str = ft_strdup1(head_ptr, "");  // Empty string if no value
+// 			return (str);
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// 	return (NULL);
+// }
+
+char	*get_vr(t_env_copy **head, t_ptr **head_ptr, char *name)
 {
-	t_env	*tmp;
-	char	*str;
-	size_t	size;
+	t_env_copy	*tmp;
+	char		*str;
+	size_t		name_len;
 
-	if (!head || !*head || !name)  // Add null checks
+	
+	if (!head || !*head || !name)
 		return (NULL);
 	tmp = *head;
-	size = ft_strlen(name);
+	name_len = ft_strlen(name);
+	
 	while (tmp)
 	{
-		if (tmp->var && !(ft_strcmp_vr(tmp->var, name, size)))
+		if (tmp->key && !(ft_strcmp_vr(tmp->key, name, name_len)))
 		{
-			str = ft_strdup1(head_ptr, tmp->var);
-			return (str);
+			
+			// Return just the value, not key+value
+			if (tmp->value)
+			{
+				str = ft_strdup1(head_ptr, tmp->value);
+				return (str);
+			}
+			else
+			{
+				// Variable exists but has no value (like "x=")
+				str = ft_strdup1(head_ptr, "");
+				return (str);
+			}
 		}
 		tmp = tmp->next;
 	}
+	
 	return (NULL);
 }
 

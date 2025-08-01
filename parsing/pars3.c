@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars3.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 20:09:53 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/09 23:31:31 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/16 23:18:31 by mteffahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,24 @@ static void cpy(char *vl, char *input, int pos, int len)
 	vl[tmp] = '\0';
 }
 
+static char	*two_qt(t_ptr **head, char *input, int *i)
+{
+	if (ft_strlen(input) == 2)
+	{
+		if (input[*i] == '\"' && input[(*i) + 1] == '\"')
+		{
+			(*i) += ft_strlen(input);
+			return (ft_strdup1(head, input));
+		}
+		else if (input[*i] == '\'' && input[(*i) + 1] == '\'')
+		{
+			(*i) += ft_strlen(input);
+			return (ft_strdup1(head, input));
+		}
+	}
+	return (NULL);
+}
+
 int	splt_quoted(t_ptr **head, t_tkn **token, char *input, int *i)
 {
 	int			len;
@@ -34,6 +52,18 @@ int	splt_quoted(t_ptr **head, t_tkn **token, char *input, int *i)
 
 	if (!input)
 		return (ft_mall(head, 0), 0);
+	if (ft_strlen(input) == 2 && input[*i] == '\"' && input[(*i) + 1] == '\"')
+	{
+		vl = two_qt(head, input, i);
+		creat_tkn_node(head, token, vl, identify_tkn(vl));
+		return (0);
+	}
+	if (ft_strlen(input) == 2 && input[*i] == '\'' && input[(*i) + 1] == '\'')
+	{
+		vl = two_qt(head, input, i);
+		creat_tkn_node(head, token, vl, identify_tkn(vl));
+		return (0);
+	}
 	q_type = input[*i];
 	(*i)++;
 	len = 0;
@@ -46,7 +76,7 @@ int	splt_quoted(t_ptr **head, t_tkn **token, char *input, int *i)
 	if (input[*i] == q_type)
 		(*i)++;  // Skip closing quote
 	if (len == 0 && (*i) >= 2 && input[(*i) - 3] != '=')
-		return (ft_putstr_fd("cat: '': No such file or directory\n", 2), 0);
+		return (0);
 	vl = ft_mall(head, (len + 1));
 	cpy(vl, input, pos, len);
 	creat_tkn_node(head, token, vl, identify_tkn(vl));
@@ -90,7 +120,7 @@ int	expand_var(char *input, int *i, t_tkn **tkn_head, t_ptr **head_ptr)
 	{
 		(*i)++;
 		ft_mall(head_ptr, 0);
-		return (ft_putstr_fd("\n", 1), 0);
+		return (ft_putstr_fd("", 1), 0);
 	}
 	creat_tkn_node(head_ptr, tkn_head, (char *)env, identify_tkn(((char *)env)));
 	// (*i)++;

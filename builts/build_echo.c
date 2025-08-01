@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_echo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:43:29 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/10 16:57:05 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/15 18:46:16 by mteffahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,12 @@ int exec_echo(t_cmd *command)
     int i;
 	
     i = 1;
+	// int j = 0;
+	// while (command->args[j])
+	// {
+	// 	printf("arg = %s\n", command->args[j]);
+	// 	j++;
+	// }
     no_newline = check_n_option(command->args, &i);
     while (command->args[i])
     {

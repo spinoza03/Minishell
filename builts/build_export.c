@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:15:19 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/10 16:53:38 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/16 22:27:00 by mteffahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,45 @@ static int	is_valid_identifier(const char *str)
 	return (1);
 }
 // NEW, SMARTER LOGIC HERE
+// int	exec_export(t_cmd *command, t_shell *shell)
+// {
+// 	int		i;
+// 	char	*key;
+// 	char	*value;
+// 	char	*full_arg;
+
+// 	i = 1;
+// 	if (!command->args[i])
+// 		return (print_export_format(shell));
+// 	while (command->args[i])
+// 	{
+// 		if (command->args[i][ft_strlen(command->args[i]) - 1] == '='
+// 			&& command->args[i + 1])
+// 		{
+// 			full_arg = ft_strjoin(command->args[i], command->args[i + 1]);
+// 			i++;
+// 		}
+// 		else
+// 			full_arg = ft_strdup(command->args[i]);
+// 		if (pars_export_arg(full_arg, &key, &value) == 0)
+// 		{
+// 			if (!is_valid_identifier(key))
+// 			{
+// 				write(2, "minishell: export: `", 20);
+// 				write(2, full_arg, ft_strlen(full_arg));
+// 				write(2, "': not a valid identifier\n", 26);
+// 			}
+// 		}
+// 		else
+// 			set_env_value(shell->env_list, key, value);
+// 		free(full_arg);
+// 		free(key);
+// 		free(value);
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
 int	exec_export(t_cmd *command, t_shell *shell)
 {
 	int		i;
@@ -98,7 +137,8 @@ int	exec_export(t_cmd *command, t_shell *shell)
 		}
 		else
 			full_arg = ft_strdup(command->args[i]);
-		if (pars_export_arg(full_arg, &key, &value) == 0)
+		
+		if (pars_export_arg(full_arg, &key, &value) == 0)  // SUCCESS case
 		{
 			if (!is_valid_identifier(key))
 			{
@@ -106,9 +146,22 @@ int	exec_export(t_cmd *command, t_shell *shell)
 				write(2, full_arg, ft_strlen(full_arg));
 				write(2, "': not a valid identifier\n", 26);
 			}
+			else
+			{
+				// Actually set the variable when parsing succeeds AND identifier is valid
+				set_env_value(shell->env_list, key, value);
+			}
 		}
 		else
-			set_env_value(shell->env_list, key, value);
+		{
+			// If parsing failed, key and value might not be properly allocated
+			// Don't try to free them or use them
+			free(full_arg);
+			i++;
+			continue;
+		}
+		// If parsing fails, we don't set anything (which is correct behavior)
+		
 		free(full_arg);
 		free(key);
 		free(value);

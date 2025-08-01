@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/10 16:08:01 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/07/21 17:56:59 by mteffahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,9 @@ void    	*ft_mall(t_ptr **head, ssize_t size);
 void		ft_lstadd_back1(t_ptr **lst, t_ptr *new);
 void		ft_lstclear1(t_ptr **lst, void (*del)(void*));
 /*parsing starting*/
-t_cmd		*pars(t_ptr **head, char *input, char **env); //added env for the test
+// t_cmd		*pars(t_ptr **head, char *input, char **env); //added env for the test
+// t_cmd	*pars(int last_exit_status, t_ptr **head, char *input, char **env); // changed for env
+t_cmd	*pars(int last_exit_status, t_ptr **head, char *inp, t_env_copy **env_hd);
 int			check_q(char *input, int i);
 int			checker_synx(char *input, char check);
 int			first_q(char *input);
@@ -209,8 +211,8 @@ void		ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env		*set_env_ls(t_ptr **head_ptr, char **env);
 void		set_node(t_env **head, t_ptr **ptr_head, char *env_val);
 /************************** getting var name **************************************************/
-char		*get_vr(t_env **head, t_ptr **head_ptr, char *name);
-char		*extract_vl(t_ptr **ptr_head, char *variable);
+// char		*get_vr(t_env **head, t_ptr **head_ptr, char *name); // the old function
+// char		*extract_vl(t_ptr **ptr_head, char *variable); // old one
 int 		ft_strcmp_vr(char *s1, char *s2, size_t size);
 /************************** creating the cmd **************************************************/
 t_cmd		*parse_tokens_to_commands(t_ptr **head, t_tkn *tokens);
@@ -220,5 +222,20 @@ void		append_arg(t_ptr **head, char ***args, char *word);
 void append_redir(t_redirs **list, t_redirs *new_redir);
 t_cmd *init_new_cmd(t_ptr **head);
 //////////////////	FOR PRINTING	/////////////////////////////////////////////
+
+///////////////////////////// ana mouhssine /////////////////////////////////////
+// void shell_last_exit(int *i, int shell_last_exit); //old one
+void shell_last_exit(char *input,int *i, int shell_last_exit);
+int little_check(char *input);
+//////////////////////////////////// hadi putnbr ela wd shell last exit o blan new line f echo ////////////////////////
+void		ft_putnbr(int nbr);
+char *cpy_input(t_ptr **head, char *input); // to copy the input without white spaces
+////////////////////////////// new get variable function ///////////////////////////////////////////////////////
+char	*get_vr(t_env_copy **head, t_ptr **head_ptr, char *name);
+char	*extract_vl(t_ptr **ptr_head, t_env_copy **env_head, char *var_name);
+///////////////////////////// empty PIPE check //////////////////////////////////////////////////////////////////
+int		last_pipe_check(t_tkn **head);
+//////////////////////////////////////////////////////
+void get_shell_pid_str(t_ptr **head, int *pos);
 
 #endif
