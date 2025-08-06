@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 19:31:45 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 14:20:33 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/02 00:21:44 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,10 @@ void	set_execution_signals(void)
 {
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	heredoc_sigint_handler(int sig)
+{
+	(void)sig;
+	exit(1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/21 17:56:59 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/08/01 21:45:08 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,10 @@ int			execute_external_command(const char *exec_path, t_cmd *command, char **ori
 char		*resolve_command_path(const char *command_name, t_env_copy *env_list);
 void    	child_process_execution(const char *exec_path, char **args, char **original_envp);
 int         parent_process_wait(pid_t pid);
-
+void		heredoc_sigint_handler(int sig);
+void		check_heredoc(t_shell *shell);
+void		handle_heredoc(t_redirs *red, t_shell *shell);
+char	*ft_itoa(int n);
 
 // Redirections
 int			apply_redirections(t_cmd *command, int original_fds[2]);
