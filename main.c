@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 17:32:05 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/16 22:43:37 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/08/08 18:18:31 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static void	process_input(char *line, t_shell *shell, char **envp)
 	{
 		if (process_heredocs(command_list) == 0)
 			execute_pipeline(command_list, shell, envp);
+		else
+			shell->last_exit_status = 130;
 		cleanup_heredocs(command_list);
 	}
 	ft_mall(&memory_head, -1);

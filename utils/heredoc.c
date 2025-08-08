@@ -6,7 +6,7 @@
 /*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:18:56 by ilallali          #+#    #+#             */
-/*   Updated: 2025/08/06 19:10:51 by allali           ###   ########.fr       */
+/*   Updated: 2025/08/06 19:12:51 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void handle_heredoc_read_child(const char *delimiter, const char *temp_filename)
     char    *line;
     int     fd;
 
-    signal(SIGINT, SIG_DFL); // Reset Ctrl-C to default for the child
+    signal(SIGINT, SIG_DFL);
     fd = open(temp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
     if (fd == -1)
         exit(1);
@@ -60,12 +60,11 @@ int	execute_single_heredoc(t_redirs *redir)
 	temp_filename = generate_heredoc_filename();
 	if (!temp_filename)
 		return (1);
-	// 1. Parent process ignores SIGINT before forking.
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == -1)
 	{
-		signal(SIGINT, sigint_handler); // Restore handler on fork error
+		signal(SIGINT, sigint_handler);
 		free(temp_filename);
 		perror("minishell: fork");
 		return (1);
@@ -73,12 +72,11 @@ int	execute_single_heredoc(t_redirs *redir)
 	if (pid == 0)
 		handle_heredoc_read_child(redir->filename, temp_filename);
 	waitpid(pid, &status, 0);
-	// 2. Parent restores its normal signal handler AFTER the child is done.
 	signal(SIGINT, sigint_handler);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		free(temp_filename);
-		return (1); // Return 1 to signal cancellation
+		return (1);
 	}
 	redir->filename = temp_filename;
 	redir->type = red_in;
