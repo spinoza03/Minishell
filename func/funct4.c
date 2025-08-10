@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   funct4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 17:24:49 by ilallali          #+#    #+#             */
-/*   Updated: 2025/08/02 21:29:55 by allali           ###   ########.fr       */
+/*   Updated: 2025/08/10 18:08:24 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	new_str[s1_len + s2_len] = '\0';
 	return (new_str);
 }
+
 int	ft_isalpha(int c)
 {
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));

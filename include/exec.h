@@ -167,6 +167,7 @@ void initialize_signals(void);
 void sigint_handler(int signum);
 
 /* FUNCTIONS */
+int	print_export_format(t_shell *shell);
 int	ft_isalpha(int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 void	cleanup_heredocs(t_cmd *cmd_list);

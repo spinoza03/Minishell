@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   funct5.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:16:34 by allali            #+#    #+#             */
-/*   Updated: 2025/08/02 00:17:06 by allali           ###   ########.fr       */
+/*   Updated: 2025/08/10 17:51:45 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,25 @@ char	*ft_itoa(int n)
 	else
 		convert_to_str(str, num, &length);
 	return (str);
+}
+
+int	print_export_format(t_shell *shell)
+{
+	t_env_copy	*current;
+
+	current = *(shell->env_list);
+	while (current)
+	{
+		write(1, "declare -x ", 11);
+		write(1, current->key, ft_strlen(current->key));
+		if (current->value != NULL)
+		{
+			write(1, "=\"", 2);
+			write(1, current->value, ft_strlen(current->value));
+			write(1, "\"", 1);
+		}
+		write(1, "\n", 1);
+		current = current->next;
+	}
+	return (0);
 }

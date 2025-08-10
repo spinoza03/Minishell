@@ -3,35 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   build_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:15:19 by ilallali          #+#    #+#             */
-/*   Updated: 2025/08/01 21:03:26 by allali           ###   ########.fr       */
+/*   Updated: 2025/08/10 18:01:49 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/exec.h"
 
-static int	print_export_format(t_shell *shell)
-{
-	t_env_copy	*current;
-
-	current = *(shell->env_list);
-	while (current)
-	{
-		write(1, "declare -x ", 11);
-		write(1, current->key, ft_strlen(current->key));
-		if (current->value != NULL)
-		{
-			write(1, "=\"", 2);
-			write(1, current->value, ft_strlen(current->value));
-			write(1, "\"", 1);
-		}
-		write(1, "\n", 1);
-		current = current->next;
-	}
-	return (0);
-}
 static int	is_valid_identifier(const char *str)
 {
 	int	i;
@@ -77,6 +57,7 @@ static int	parse_assign(char *arg, char **key, char **value)
 		op_pos[0] = '=';
 	return (op_type);
 }
+
 static void	append_to_env(t_shell *shell, char *key, char *value)
 {
 	char	*old_value;
@@ -93,35 +74,41 @@ static void	append_to_env(t_shell *shell, char *key, char *value)
 		set_env_value(shell->env_list, key, value);
 }
 
-int	exec_export(t_cmd *command, t_shell *shell)
+static void	process_export_arg(char *arg, t_shell *shell)
 {
-	int		i;
 	char	*key;
 	char	*value;
 	int		assign_type;
+
+	assign_type = parse_assign(arg, &key, &value);
+	if (!is_valid_identifier(key))
+	{
+		ft_putstr_fd("minishell: export: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+	}
+	else
+	{
+		if (assign_type == 2)
+			append_to_env(shell, key, value);
+		else
+			set_env_value(shell->env_list, key, value);
+	}
+	free(key);
+	if (value)
+		free(value);
+}
+
+int	exec_export(t_cmd *command, t_shell *shell)
+{
+	int	i;
 
 	i = 1;
 	if (!command->args[i])
 		return (print_export_format(shell));
 	while (command->args[i])
 	{
-		assign_type = parse_assign(command->args[i], &key, &value);
-		if (!is_valid_identifier(key))
-		{
-			write(2, "minishell: export: `", 20);
-			write(2, command->args[i], ft_strlen(command->args[i]));
-			write(2, "': not a valid identifier\n", 26);
-		}
-		else
-		{
-			if (assign_type == 2)
-				append_to_env(shell, key, value);
-			else
-				set_env_value(shell->env_list, key, value);
-		}
-		free(key);
-		if (value)
-			free(value);
+		process_export_arg(command->args[i], shell);
 		i++;
 	}
 	return (0);

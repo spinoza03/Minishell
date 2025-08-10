@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 17:14:40 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/01 18:34:35 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/10 18:02:39 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	exec_pwd(t_cmd *cmd)
 {
-	char pw[1024];
+	char	pw[1024];
 
 	(void)cmd;
-	if(getcwd(pw, sizeof(pw)) != NULL)
+	if (getcwd(pw, sizeof(pw)) != NULL)
 	{
 		printf("%s\n", pw);
 		return (0);
@@ -25,6 +25,6 @@ int	exec_pwd(t_cmd *cmd)
 	else
 	{
 		perror("minishell : pwd");
-		return (1);	
+		return (1);
 	}
 }

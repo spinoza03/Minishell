@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 16:26:49 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/16 21:57:03 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/10 18:07:07 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,20 @@ char	*ft_strcpy(char *dst, char *src)
 	return (dst);
 }
 
-void ft_free_str_array(char **array)
+void	ft_free_str_array(char **array)
 {
-    int i;
+	int	i;
 
-    if (!array)
-        return;
-    i = 0;
-    while (array[i])
-    {
-        free(array[i]);
-        array[i] = NULL;
-        i++;
-    }
-    free(array);
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		array[i] = NULL;
+		i++;
+	}
+	free(array);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -51,16 +51,13 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	i = 0;
 	if (n == 0)
 		return (0);
-	while (i < n && (s1[i] || s2[i]))
-	{
-		u1 = (unsigned char)s1[i];
-		u2 = (unsigned char)s2[i];
-		if (u1 != u2)
-			return (u1 - u2);
+	while (i < n - 1 && s1[i] && s1[i] == s2[i])
 		i++;
-	}
-	return (0);
+	u1 = (unsigned char)s1[i];
+	u2 = (unsigned char)s2[i];
+	return (u1 - u2);
 }
+
 void	ft_putchar_fd(char c, int fd)
 {
 	if (fd < 0)

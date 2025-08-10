@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 13:09:57 by ilallali          #+#    #+#             */
-/*   Updated: 2025/06/14 19:33:36 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/10 18:05:15 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ size_t	ft_strlen(const char *s)
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	size_t				i;
-	unsigned char		*des;
-	unsigned char		*str;
+	size_t			i;
+	unsigned char	*des;
+	unsigned char	*str;
 
 	if (!dst && !src)
 		return (NULL);
@@ -44,6 +44,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	}
 	return (dst);
 }
+
 int	ft_strcmp(const char *str, const char *cmp)
 {
 	int	i;
@@ -63,7 +64,7 @@ char	*ft_strchr(const char *str, int c)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == c)
+		if (str[i] == (char)c)
 			return ((char *)&str[i]);
 		else
 			i++;
@@ -71,21 +72,21 @@ char	*ft_strchr(const char *str, int c)
 	return (NULL);
 }
 
-char *ft_strcat(char *dst, const char *src)
+char	*ft_strcat(char *dst, const char *src)
 {
-    size_t  dst_idx; // To find the end of dst
-    size_t  src_idx; // To iterate through src
+	size_t	dst_idx;
+	size_t	src_idx;
 
-    dst_idx = 0;
-    while (dst[dst_idx])
-        dst_idx++;
-    src_idx = 0;
-    while (src[src_idx])
-    {
-        dst[dst_idx] = src[src_idx];
-        dst_idx++;
-        src_idx++;
-    }
-    dst[dst_idx] = '\0';
-    return (dst);
+	dst_idx = 0;
+	while (dst[dst_idx])
+		dst_idx++;
+	src_idx = 0;
+	while (src[src_idx])
+	{
+		dst[dst_idx] = src[src_idx];
+		dst_idx++;
+		src_idx++;
+	}
+	dst[dst_idx] = '\0';
+	return (dst);
 }
