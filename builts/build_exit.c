@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 17:19:47 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/14 00:51:31 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/08/10 14:51:39 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static int	is_valid_long_long(const char *str)
 		len++;
 		i++;
 	}
-	// A quick check to prevent obvious overflow. 19 is the max digits for LLONG.
 	if (len > 19)
 		return (0);
 	return (1);

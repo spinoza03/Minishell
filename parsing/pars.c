@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 15:39:06 by mteffahi          #+#    #+#             */
-/*   Updated: 2025/07/21 17:57:10 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/08/10 14:30:45 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -367,7 +367,7 @@ t_cmd	*pars(int last_exit_status, t_ptr **head, char *inp, t_env_copy **env_hd)
 		{
 			i++;
 			char *whole_vr = get_vr(env_hd, head, gt_nm(input, &i, head));
-			printf("whole %s\n", whole_vr);
+			// printf("whole %s\n", whole_vr);
 			// char *val = extract_vl(head, env_hd, whole_vr); // not needed anymore
 			creat_tkn_node(head, &tkn_head, whole_vr, identify_tkn(whole_vr));
 		}

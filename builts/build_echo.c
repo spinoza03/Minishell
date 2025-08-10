@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_echo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mteffahi <mteffahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 16:43:29 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/15 18:46:16 by mteffahi         ###   ########.fr       */
+/*   Updated: 2025/08/10 14:46:25 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	check_n(char *str)
 	return (0);
 }
 
-static int check_n_option(char **arg, int *first_arg_idx)
+static int	check_n_option(char **arg, int *first_arg_idx)
 {
 	int	i;
 	int	flag;
@@ -44,37 +44,27 @@ static int check_n_option(char **arg, int *first_arg_idx)
 			*first_arg_idx += 1;
 		}
 		else
-			break;
+			break ;
 		i++;
 	}
-    return (flag);
+	return (flag);
 }
 
-int exec_echo(t_cmd *command)
+int	exec_echo(t_cmd *command)
 {
-	int no_newline;
-    int i;
-	
-    i = 1;
-	// int j = 0;
-	// while (command->args[j])
-	// {
-	// 	printf("arg = %s\n", command->args[j]);
-	// 	j++;
-	// }
-    no_newline = check_n_option(command->args, &i);
-    while (command->args[i])
-    {
-        write(1, command->args[i], ft_strlen(command->args[i]));
-        if (command->args[i + 1])
-        {
-            write(1, " ", 1);
-        }
-        i++;
-    }
-    if (no_newline == 0)
-    {
-        write(1, "\n", 1);
-    }
-    return (0);
+	int	no_newline;
+	int	i;
+
+	i = 1;
+	no_newline = check_n_option(command->args, &i);
+	while (command->args[i])
+	{
+		ft_putstr_fd(command->args[i], 1);
+		if (command->args[i + 1])
+			write(1, " ", 1);
+		i++;
+	}
+	if (no_newline == 0)
+		write(1, "\n", 1);
+	return (0);
 }
