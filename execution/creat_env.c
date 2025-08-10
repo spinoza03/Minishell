@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 16:44:32 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/08 15:36:01 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/10 18:23:15 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static int	parse_no_equal(const char *env_s, char **key, char **val)
 	return (1);
 }
 
-// Helper 2: Handles parsing when the string has an '='.
 static int	parse_with_equal(const char *env_s, char *eq_pos,
 							char **key, char **val)
 {
@@ -57,7 +56,6 @@ static int	parse_with_equal(const char *env_s, char *eq_pos,
 	return (1);
 }
 
-// The main function, now clean and under the line limit.
 int	parse_env(const char *env_string, char **key_ptr, char **value_ptr)
 {
 	char	*equal_sign_pos;
@@ -81,7 +79,7 @@ int	parse_env(const char *env_string, char **key_ptr, char **value_ptr)
 	return (1);
 }
 
-void create_env_list(t_env_copy **list_head, char **env)
+void	create_env_list(t_env_copy **list_head, char **env)
 {
 	int			i;
 	char		*key;
@@ -94,12 +92,12 @@ void create_env_list(t_env_copy **list_head, char **env)
 	{
 		key = NULL;
 		value = NULL;
-		if(parse_env(env[i], &key, &value))
+		if (parse_env(env[i], &key, &value))
 		{
 			new_node = env_lstnew(key, value);
 			free(key);
 			free(value);
-			if(!new_node)
+			if (!new_node)
 			{
 				env_lstclear(list_head);
 				exit(EXIT_FAILURE);

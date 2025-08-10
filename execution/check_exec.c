@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 14:47:25 by ilallali          #+#    #+#             */
-/*   Updated: 2025/07/10 00:07:32 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/10 18:22:28 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,20 @@ static void	handle_external_command(t_cmd *command, t_shell *shell,
 	if (executable_path)
 	{
 		execve(executable_path, command->args, original_envp);
-		// If execve returns, an error occurred.
 		free(executable_path);
 		write(2, "minishell: ", 11);
 		perror(command->args[0]);
-		exit(126); // Command invoked cannot execute
+		exit(126);
 	}
 	else
 	{
 		write(2, "minishell: ", 11);
 		write(2, command->args[0], ft_strlen(command->args[0]));
 		write(2, ": command not found\n", 20);
-		exit(127); // Command not found
+		exit(127);
 	}
 }
 
-// The controller decides what to run. For external commands, it calls a
-// function that will use execve and will not return.
 int	execute_command_controller(t_cmd *command, t_shell *shell,
 									char **original_envp)
 {
@@ -54,5 +51,5 @@ int	execute_command_controller(t_cmd *command, t_shell *shell,
 		return (execute_builtin_command(builtin_id, command, shell));
 	else
 		handle_external_command(command, shell, original_envp);
-	return (1); // This line is only reached if execve fails
+	return (1);
 }

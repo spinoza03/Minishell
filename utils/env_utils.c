@@ -3,32 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 16:43:48 by ilallali          #+#    #+#             */
-/*   Updated: 2025/08/01 18:52:11 by allali           ###   ########.fr       */
+/*   Updated: 2025/08/10 18:12:07 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/exec.h"
 
-char *get_env_value(t_env_copy *env_list, const char *key)
+char	*get_env_value(t_env_copy *env_list, const char *key)
 {
-    t_env_copy *current;
+	t_env_copy	*current;
 
-    if (!env_list || !key)
-        return (NULL);
-    current = env_list;
-    while (current != NULL)
-    {
-        if (ft_strcmp(current->key, key) == 0)
-        {
-            return (current->value);
-        }
-        current = current->next;
-    }
-    return (NULL);
+	if (!env_list || !key)
+		return (NULL);
+	current = env_list;
+	while (current != NULL)
+	{
+		if (ft_strcmp(current->key, key) == 0)
+		{
+			return (current->value);
+		}
+		current = current->next;
+	}
+	return (NULL);
 }
+
 static char	*check_absolute_path(const char *command_name)
 {
 	if (ft_strchr(command_name, '/'))
@@ -41,7 +42,6 @@ static char	*check_absolute_path(const char *command_name)
 	return (NULL);
 }
 
-// Helper 2: Searches for the command in the directories from the PATH variable.
 static char	*search_in_path(const char *cmd, char **dirs)
 {
 	char	*full_path;
@@ -50,8 +50,6 @@ static char	*search_in_path(const char *cmd, char **dirs)
 	i = 0;
 	while (dirs[i])
 	{
-		// Note: A real implementation would use ft_strjoin for safety.
-		// This is kept simple to match your existing style.
 		full_path = malloc(ft_strlen(dirs[i]) + ft_strlen(cmd) + 2);
 		if (!full_path)
 			return (NULL);
@@ -66,7 +64,6 @@ static char	*search_in_path(const char *cmd, char **dirs)
 	return (NULL);
 }
 
-// The main function, now clean and under 25 lines.
 char	*resolve_command_path(const char *command_name, t_env_copy *env_list)
 {
 	char	*path_env;
@@ -89,27 +86,28 @@ char	*resolve_command_path(const char *command_name, t_env_copy *env_list)
 	return (executable_path);
 }
 
-int set_env_value(t_env_copy **env_list, const char *key, const char *new_value)
+int	set_env_value(t_env_copy **env_list, const char *key, const char *new_value)
 {
-    t_env_copy *current;
+	t_env_copy	*current;
+	t_env_copy	*new_node;
 
-    current = *env_list;
-    while (current)
-    {
-        if (ft_strcmp(current->key, key) == 0)
-        {
-            free(current->value);
-            if (new_value)
-                current->value = ft_strdup(new_value);
-            else
-                current->value = NULL;
-            return (0);
-        }
-        current = current->next;
-    }
-    t_env_copy *new_node = env_lstnew((char *)key, (char *)new_value);
-    if (!new_node)
-        return (1);
-    ft_lstadd_back(env_list, new_node);
-    return (0);
+	current = *env_list;
+	while (current)
+	{
+		if (ft_strcmp(current->key, key) == 0)
+		{
+			free(current->value);
+			if (new_value)
+				current->value = ft_strdup(new_value);
+			else
+				current->value = NULL;
+			return (0);
+		}
+		current = current->next;
+	}
+	new_node = env_lstnew((char *)key, (char *)new_value);
+	if (!new_node)
+		return (1);
+	ft_lstadd_back(env_list, new_node);
+	return (0);
 }

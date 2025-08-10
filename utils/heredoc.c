@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:18:56 by ilallali          #+#    #+#             */
-/*   Updated: 2025/08/06 19:12:51 by allali           ###   ########.fr       */
+/*   Updated: 2025/08/10 18:16:35 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,46 +26,41 @@ static char	*generate_heredoc_filename(void)
 	return (filename);
 }
 
-void handle_heredoc_read_child(const char *delimiter, const char *temp_filename)
+void	handle_heredoc_read_child(const char *delimiter,
+		const char *temp_filename)
 {
-    char    *line;
-    int     fd;
+	char	*line;
+	int		fd;
 
-    signal(SIGINT, SIG_DFL);
-    fd = open(temp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-    if (fd == -1)
-        exit(1);
-    while (1)
-    {
-        line = readline("> ");
-        if (!line || ft_strcmp(line, delimiter) == 0)
-        {
-            free(line);
-            break;
-        }
-        write(fd, line, ft_strlen(line));
-        write(fd, "\n", 1);
-        free(line);
-    }
-    close(fd);
-    exit(0);
+	signal(SIGINT, SIG_DFL);
+	fd = open(temp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (fd == -1)
+		exit(1);
+	while (1)
+	{
+		line = readline("> ");
+		if (!line || ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+	}
+	close(fd);
+	exit(0);
 }
 
-int	execute_single_heredoc(t_redirs *redir)
+static int	fork_and_wait_heredoc(t_redirs *redir, const char *temp_filename)
 {
 	pid_t	pid;
 	int		status;
-	char	*temp_filename;
 
-	temp_filename = generate_heredoc_filename();
-	if (!temp_filename)
-		return (1);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == -1)
 	{
-		signal(SIGINT, sigint_handler);
-		free(temp_filename);
 		perror("minishell: fork");
 		return (1);
 	}
@@ -74,6 +69,18 @@ int	execute_single_heredoc(t_redirs *redir)
 	waitpid(pid, &status, 0);
 	signal(SIGINT, sigint_handler);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		return (1);
+	return (0);
+}
+
+int	execute_single_heredoc(t_redirs *redir)
+{
+	char	*temp_filename;
+
+	temp_filename = generate_heredoc_filename();
+	if (!temp_filename)
+		return (1);
+	if (fork_and_wait_heredoc(redir, temp_filename) != 0)
 	{
 		free(temp_filename);
 		return (1);
@@ -104,28 +111,4 @@ int	process_heredocs(t_cmd *cmd_list)
 		current_cmd = current_cmd->next;
 	}
 	return (0);
-}
-
-void	cleanup_heredocs(t_cmd *cmd_list)
-{
-	t_cmd		*current_cmd;
-	t_redirs	*redir;
-
-	current_cmd = cmd_list;
-	while (current_cmd)
-	{
-		redir = current_cmd->redirs;
-		while (redir)
-		{
-			if (redir->type == red_in
-				&& ft_strncmp(redir->filename, "/tmp/heredoc_", 13) == 0)
-			{
-				unlink(redir->filename);
-				free(redir->filename);
-				redir->filename = NULL;
-			}
-			redir = redir->next;
-		}
-		current_cmd = current_cmd->next;
-	}
 }

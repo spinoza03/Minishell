@@ -6,7 +6,7 @@
 /*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 00:16:34 by allali            #+#    #+#             */
-/*   Updated: 2025/08/10 17:51:45 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/10 18:16:53 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,28 @@ int	print_export_format(t_shell *shell)
 		current = current->next;
 	}
 	return (0);
+}
+
+void	cleanup_heredocs(t_cmd *cmd_list)
+{
+	t_cmd		*current_cmd;
+	t_redirs	*redir;
+
+	current_cmd = cmd_list;
+	while (current_cmd)
+	{
+		redir = current_cmd->redirs;
+		while (redir)
+		{
+			if (redir->type == red_in
+				&& ft_strncmp(redir->filename, "/tmp/heredoc_", 13) == 0)
+			{
+				unlink(redir->filename);
+				free(redir->filename);
+				redir->filename = NULL;
+			}
+			redir = redir->next;
+		}
+		current_cmd = current_cmd->next;
+	}
 }

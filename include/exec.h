@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 13:49:54 by ilallali          #+#    #+#             */
-/*   Updated: 2025/08/01 21:45:08 by allali           ###   ########.fr       */
+/*   Updated: 2025/08/10 19:23:14 by ilallali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ typedef enum e_tkn_type
 	red_apnd,	// >>	5
 	HEREDOC		// <<	6
 }t_tkn_type;
+
+typedef struct s_fds
+{
+	int	pipe[2];
+	int	in;
+	int	out;
+}	t_fds;
 
 typedef struct s_ptr
 {
@@ -167,6 +174,9 @@ void initialize_signals(void);
 void sigint_handler(int signum);
 
 /* FUNCTIONS */
+int is_parent_builtin(t_builtin_id id);
+int count_commands(t_cmd *cmd_list);
+void	parent_setup_pipes(t_fds *fds, t_cmd *cmd);
 int	print_export_format(t_shell *shell);
 int	ft_isalpha(int c);
 char	*ft_strjoin(char const *s1, char const *s2);
