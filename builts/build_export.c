@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilallali <ilallali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: allali <allali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:15:19 by ilallali          #+#    #+#             */
-/*   Updated: 2025/08/10 18:01:49 by ilallali         ###   ########.fr       */
+/*   Updated: 2025/08/16 20:06:21 by allali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,15 +101,31 @@ static void	process_export_arg(char *arg, t_shell *shell)
 
 int	exec_export(t_cmd *command, t_shell *shell)
 {
-	int	i;
+	int		i;
+	char	*full_arg;
+	char	*current_arg;
 
 	i = 1;
 	if (!command->args[i])
 		return (print_export_format(shell));
 	while (command->args[i])
 	{
-		process_export_arg(command->args[i], shell);
-		i++;
+		current_arg = command->args[i];
+		if (current_arg[ft_strlen(current_arg) - 1] == '='
+			&& command->args[i + 1])
+		{
+			full_arg = ft_strjoin(current_arg, command->args[i + 1]);
+			if (!full_arg)
+				return (1); // Malloc error
+			process_export_arg(full_arg, shell);
+			free(full_arg);
+			i += 2; // We consumed two arguments, so skip ahead
+		}
+		else
+		{
+			process_export_arg(current_arg, shell);
+			i += 1; // We consumed one argument
+		}
 	}
 	return (0);
 }
